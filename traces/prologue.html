@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VEIL-9 · When Stars Collide</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;900&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── DESIGN TOKENS ── */
+/* Present: dark warm amber */
+/* Flashback: light cream parchment */
+/* Drive/crash: very dark */
+
+html { scroll-behavior: auto; }
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.95;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── PAGE THEMES ── */
+body.theme-title {
+  background: #0c0906;
+  color: #e0d4bc;
+}
+body.theme-present {
+  background: #120e09;
+  color: #e0d4bc;
+}
+body.theme-flashback {
+  background: #f2e8d4;
+  color: #2c2010;
+}
+body.theme-drive {
+  background: #090604;
+  color: #d8cbb4;
+}
+
+/* ── WIPE OVERLAY ── */
+#wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  background: #0c0906;
+}
+
+/* ── PAGES ── */
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; }
+
+/* ── TITLE CARD ── */
+#page-title {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── META BAR ── */
+.meta {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.85rem 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.theme-present .meta {
+  background: rgba(18,14,9,0.95);
+  border-bottom-color: rgba(192,152,72,0.15);
+  color: #8a7a5c;
+}
+.theme-present .meta .meta-ch { color: #c09848; }
+
+.theme-flashback .meta {
+  background: rgba(240,232,212,0.97);
+  border-bottom-color: rgba(160,128,64,0.2);
+  color: #8a7a5a;
+}
+.theme-flashback .meta .meta-ch { color: #5a4020; }
+
+.theme-drive .meta {
+  background: rgba(9,6,4,0.97);
+  border-bottom-color: rgba(160,80,80,0.15);
+  color: #6a5a44;
+}
+.theme-drive .meta .meta-ch { color: #c09848; }
+
+.meta-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+.theme-present .meta-back { color: #8a7a5c; }
+.theme-flashback .meta-back { color: #8a7a5a; }
+.theme-drive .meta-back { color: #6a5a44; }
+.meta-back:hover { opacity: 0.7; }
+
+/* ── SCENE ── */
+.scene {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 3.5rem 1.6rem 5rem;
+}
+@media (min-width: 600px) {
+  .scene { padding: 4rem 2rem 5rem; }
+}
+
+/* ── SCROLL REVEAL ── */
+.sr {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.sr.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── SCENE HEADER ── */
+.eyebrow {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.theme-present .eyebrow { color: #7a6035; }
+.theme-flashback .eyebrow { color: #8a7040; }
+.theme-drive .eyebrow { color: #7a6035; }
+
+.scene-h {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.9rem, 5.5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+.theme-present .scene-h { color: #e8dcc8; }
+.theme-flashback .scene-h { color: #1e1408; }
+.theme-drive .scene-h { color: #e0d4bc; }
+
+.scene-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-bottom: 2.8rem;
+}
+.theme-present .scene-sub { color: #c09848; }
+.theme-flashback .scene-sub { color: #7a6040; }
+.theme-drive .scene-sub { color: #c09848; }
+
+/* ── PROSE ── */
+.p {
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.95;
+}
+.theme-present .p { color: #c8b898; }
+.theme-flashback .p { color: #2a1c0c; }
+.theme-drive .p { color: #c0b090; }
+
+.p em { font-style: italic; }
+.theme-present .p em { color: #e0d4bc; }
+.theme-flashback .p em { color: #1e1408; }
+.theme-drive .p em { color: #d8cbb4; }
+
+.p strong { font-weight: 500; }
+.theme-present .p strong { color: #e0d4bc; }
+.theme-flashback .p strong { color: #1e1408; }
+
+.p-center {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.95rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.theme-present .p-center { color: #9a8a6a; }
+.theme-flashback .p-center { color: #5a4020; }
+.theme-drive .p-center { color: #8a7a5a; }
+
+/* ── ACADEMIC BLOCK ── */
+.academic {
+  padding: 1.2rem 1.6rem;
+  margin: 2rem 0;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 2.1;
+  border-left: 2px solid #7a6035;
+  position: relative;
+  min-height: 2rem;
+}
+.theme-present .academic {
+  background: rgba(192,152,72,0.05);
+  color: #9a8a6a;
+  border-left-color: #7a6035;
+}
+.academic::before {
+  content: '"';
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  color: #7a6035;
+  opacity: 0.2;
+  position: absolute;
+  top: -0.3rem;
+  left: 0.7rem;
+  line-height: 1;
+}
+#typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  background: #c09848;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── SFX ── */
+.sfx {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.8rem 0 1rem;
+}
+.sfx::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+.theme-present .sfx { color: #7a6035; }
+.theme-present .sfx::after { background: linear-gradient(90deg, rgba(192,152,72,0.25), transparent); }
+.theme-flashback .sfx { color: #5a4010; }
+.theme-flashback .sfx::after { background: linear-gradient(90deg, rgba(90,64,16,0.3), transparent); }
+.theme-drive .sfx { color: #7a6035; }
+.theme-drive .sfx::after { background: linear-gradient(90deg, rgba(192,152,72,0.2), transparent); }
+
+.sfx-red {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a2020;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.8rem 0 1rem;
+}
+.sfx-red::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(122,32,32,0.35), transparent);
+}
+
+/* ── DIALOGUE ── */
+.dl {
+  margin: 1.6rem 0;
+  padding: 1rem 1.3rem;
+  border-left: 2px solid;
+}
+.theme-present .dl {
+  border-left-color: rgba(192,152,72,0.25);
+  background: rgba(192,152,72,0.03);
+}
+.theme-flashback .dl {
+  border-left-color: rgba(120,96,48,0.25);
+  background: rgba(120,96,48,0.04);
+}
+.theme-drive .dl {
+  border-left-color: rgba(192,152,72,0.2);
+  background: rgba(0,0,0,0.1);
+}
+
+.dl-spk {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  font-weight: 500;
+}
+.theme-present .dl-spk { color: #c09848; }
+.theme-flashback .dl-spk { color: #5a3a10; }
+.theme-drive .dl-spk { color: #c09848; }
+
+.dl-line {
+  font-size: 1.12rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.75;
+}
+.theme-present .dl-line { color: #e8dcc8; }
+.theme-flashback .dl-line { color: #1e1408; }
+.theme-drive .dl-line { color: #e0d4bc; }
+
+.dl-act {
+  font-size: 0.9rem;
+  font-weight: 300;
+  margin-top: 0.35rem;
+  line-height: 1.65;
+}
+.theme-present .dl-act { color: #9a8a6a; }
+.theme-flashback .dl-act { color: #5a4a2a; }
+.theme-drive .dl-act { color: #9a8a6a; }
+
+/* ── DIVIDER ── */
+.div {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 2.5rem 0;
+}
+.div::before, .div::after {
+  content: ''; flex: 1; height: 1px;
+}
+.theme-present .div::before,
+.theme-present .div::after { background: linear-gradient(90deg, transparent, rgba(192,152,72,0.18), transparent); }
+.theme-flashback .div::before,
+.theme-flashback .div::after { background: linear-gradient(90deg, transparent, rgba(90,64,16,0.28), transparent); }
+.theme-drive .div::before,
+.theme-drive .div::after { background: linear-gradient(90deg, transparent, rgba(160,80,80,0.15), transparent); }
+
+.div span {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  white-space: nowrap;
+}
+.theme-present .div span { color: #7a6035; }
+.theme-flashback .div span { color: #5a4010; }
+.theme-drive .div span { color: #6a5040; }
+
+/* ── PHOTO CARD ── */
+.photo {
+  margin: 1.8rem 0;
+  overflow: hidden;
+}
+.theme-present .photo { border: 1px solid rgba(192,152,72,0.15); }
+.theme-flashback .photo { border: 1px solid rgba(120,96,48,0.2); }
+.theme-drive .photo { border: 1px solid rgba(192,152,72,0.12); }
+
+.photo-ph {
+  width: 100%;
+  height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.theme-present .photo-ph { background: #1a1208; }
+.theme-flashback .photo-ph { background: #e0d4bc; }
+.theme-drive .photo-ph { background: #100a06; }
+
+.photo-ph-icon { font-size: 2rem; opacity: 0.28; }
+.photo-ph-lbl {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 200px;
+  line-height: 1.8;
+}
+.theme-present .photo-ph-lbl { color: #9a8a6a; }
+.theme-flashback .photo-ph-lbl { color: #8a7a5a; }
+.theme-drive .photo-ph-lbl { color: #9a8a6a; }
+
+.photo-cap {
+  padding: 0.6rem 1rem;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.theme-present .photo-cap { color: #9a8a6a; border-top-color: rgba(192,152,72,0.12); }
+.theme-flashback .photo-cap { color: #8a7a5a; border-top-color: rgba(120,96,48,0.15); }
+.theme-drive .photo-cap { color: #9a8a6a; border-top-color: rgba(192,152,72,0.1); }
+
+/* ── SCENE BUTTON ── */
+.scene-btn {
+  display: inline-block;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  background: transparent;
+  padding: 0.95rem 2rem;
+  cursor: pointer;
+  margin: 2rem 0;
+  transition: background 0.25s, border-color 0.25s;
+}
+.theme-present .scene-btn { border: 1px solid #7a6035; color: #c09848; }
+.theme-present .scene-btn:hover { background: rgba(192,152,72,0.06); border-color: #c09848; }
+.theme-flashback .scene-btn { border: 1px solid rgba(120,96,48,0.45); color: #5a4020; }
+.theme-flashback .scene-btn:hover { background: rgba(120,96,48,0.08); }
+.theme-drive .scene-btn { border: 1px solid #7a6035; color: #c09848; }
+.theme-drive .scene-btn:hover { background: rgba(192,152,72,0.06); }
+
+/* ── CRASH BLOCK ── */
+.crash-block {
+  padding: 2rem 1.5rem;
+  margin: 2.5rem 0;
+  border-top: 1px solid rgba(120,32,32,0.28);
+  border-bottom: 1px solid rgba(120,32,32,0.28);
+  background: rgba(80,10,10,0.08);
+}
+.rain {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.68rem;
+  color: rgba(80,110,140,0.25);
+  letter-spacing: 0.04em;
+  margin: 0.8rem 0;
+  user-select: none;
+}
+.impact {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: clamp(1.9rem, 6vw, 3.5rem);
+  text-align: center;
+  line-height: 1;
+  margin: 1.8rem 0;
+  letter-spacing: 0.06em;
+}
+.impact-w { color: #e0d4bc; }
+.impact-r { color: #b02828; }
+.crash-p { color: #8a7a68; font-size: 0.95rem; }
+.crash-p-dark { color: #6a5a48; font-size: 0.92rem; }
+.crash-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  color: #7a2020;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── BULLSEYE MOMENT ── */
+.bullseye {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+.bullseye-word {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: clamp(1.7rem, 5vw, 3rem);
+  letter-spacing: 0.06em;
+}
+.theme-present .bullseye-word { color: #e8dcc8; }
+.theme-flashback .bullseye-word { color: #1e1408; }
+.bullseye-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  margin-top: 0.6rem;
+  letter-spacing: 0.03em;
+}
+.theme-present .bullseye-note { color: #8a7a5a; }
+.theme-flashback .bullseye-note { color: #7a6a4a; }
+
+/* ── END ── */
+.end-block {
+  text-align: center;
+  padding: 3.5rem 1rem 2.5rem;
+  border-top: 1px solid rgba(192,152,72,0.12);
+  margin-top: 2.5rem;
+}
+.end-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: #7a6035;
+  margin-bottom: 1.8rem;
+}
+.end-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #8a7a5a;
+  font-weight: 300;
+  line-height: 1.9;
+  margin-bottom: 2.2rem;
+}
+.end-meta {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.52rem;
+  color: #6a5a40;
+  letter-spacing: 0.14em;
+  line-height: 2.2;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.photo-list {
+  text-align: left;
+  border: 1px solid rgba(192,152,72,0.14);
+  background: rgba(192,152,72,0.03);
+  padding: 1.2rem 1.5rem;
+  margin: 1.8rem auto;
+  max-width: 480px;
+}
+.photo-list-title {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #7a6035;
+  margin-bottom: 0.8rem;
+}
+.photo-list-item {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.62rem;
+  color: #8a7a5a;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(192,152,72,0.07);
+  line-height: 1.75;
+}
+.photo-list-item:last-child { border-bottom: none; }
+.photo-list-item strong { color: #c0a878; }
+.btn-back {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid #7a6035;
+  color: #9a8a6a;
+  padding: 0.8rem 2.2rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  transition: border-color 0.25s, color 0.25s;
+  display: inline-block;
+}
+.btn-back:hover { border-color: #c09848; color: #c09848; }
+
+/* ── CRASH SCREEN EFFECTS ── */
+#fx-red {
+  position: fixed; inset: 0; z-index: 800;
+  pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse at center, transparent 20%, rgba(110,16,16,0.85) 100%);
+}
+#fx-dark {
+  position: fixed; inset: 0; z-index: 801;
+  pointer-events: none; opacity: 0;
+  background: #000;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #7a6035; border-radius: 2px; }
+
+/* ── PERSISTENT MENU BUTTON ── */
+#menu-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 400;
+}
+#menu-btn button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(10,8,6,0.82);
+  border: 1px solid rgba(192,152,72,0.18);
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9a8a6a;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+  backdrop-filter: blur(4px);
+}
+#menu-btn button:hover {
+  border-color: rgba(192,152,72,0.4);
+  color: #c09848;
+  background: rgba(10,8,6,0.95);
+}
+.menu-btn-icon { font-size: 0.8rem; line-height: 1; }
+.menu-btn-label { font-size: 0.55rem; }
+
+/* Flashback theme menu button */
+body.theme-flashback #menu-btn button {
+  background: rgba(240,232,212,0.88);
+  border-color: rgba(120,96,48,0.25);
+  color: #7a6040;
+}
+body.theme-flashback #menu-btn button:hover {
+  border-color: rgba(120,96,48,0.5);
+  color: #4a3020;
+}
+
+/* ── SAVE PROMPT ── */
+.save-prompt {
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.6rem;
+  border: 1px solid rgba(192,152,72,0.18);
+  background: rgba(192,152,72,0.04);
+}
+.save-prompt-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e0d4bc;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+.save-prompt-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #9a8a6a;
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+.save-prompt-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.save-btn {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.2rem;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+}
+.save-btn-yes {
+  border: 1px solid rgba(192,152,72,0.35);
+  color: #c09848;
+}
+.save-btn-yes:hover {
+  background: rgba(192,152,72,0.08);
+  border-color: #c09848;
+}
+.save-btn-no {
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #7a6a4a;
+}
+.save-btn-no:hover {
+  border-color: rgba(255,255,255,0.16);
+  color: #9a8a6a;
+}
+
+/* Save done confirmation */
+.save-done {
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.6rem;
+  border: 1px solid rgba(192,152,72,0.2);
+  background: rgba(192,152,72,0.05);
+  text-align: center;
+}
+.save-done-icon {
+  font-size: 1.5rem;
+  color: #c09848;
+  margin-bottom: 0.5rem;
+}
+.save-done-text {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #9a8a6a;
+  margin-bottom: 1.2rem;
+}
+
+
+/* ── COMIC PANEL IMAGES ── */
+.comic-panel {
+  width: 100%;
+  margin: 1.6rem 0;
+  overflow: hidden;
+  display: block;
+  border: 2px solid rgba(0,0,0,0.85);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+}
+.comic-panel img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.comic-panel img.loaded { opacity: 1; }
+.comic-panel-caption {
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.7rem;
+  border-top: 1px solid rgba(0,0,0,0.3);
+}
+.theme-present .comic-panel { box-shadow: 3px 3px 0 rgba(0,0,0,0.5); }
+.theme-present .comic-panel-caption { background: #0e0a06; color: #7a6035; }
+.theme-flashback .comic-panel-caption { background: #e0d4bc; color: #5a4020; }
+.theme-drive .comic-panel-caption { background: #060402; color: #6a5030; }
+</style>
+</head>
+<body class="theme-present">
+
+<!-- FX layers -->
+
+<!-- Persistent Menu Button -->
+<div id="menu-btn">
+  <button onclick="confirmMenu()" title="Return to Menu">
+    <span class="menu-btn-icon">&#9776;</span>
+    <span class="menu-btn-label">Menu</span>
+  </button>
+</div>
+
+<!-- Menu confirm overlay -->
+<div id="menu-confirm" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(6,7,9,0.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:2rem;">
+  <div style="border:1px solid rgba(192,152,72,0.18);background:rgba(10,8,6,0.97);padding:2rem;max-width:320px;width:100%;">
+    <div style="font-family:'Cinzel',serif;font-size:1rem;color:#e0d4bc;margin-bottom:0.8rem;letter-spacing:0.04em;">Return to Menu?</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;color:#9a8a6a;line-height:1.7;margin-bottom:1.5rem;font-weight:300;">Your reading position will not be saved at this point.</div>
+    <div style="display:flex;gap:0.6rem;">
+      <button onclick="closeMenuConfirm()" style="flex:1;font-family:'Inconsolata',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.75rem;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#9a8a6a;cursor:pointer;">Stay</button>
+      <button onclick="goToMenu()" style="flex:1;font-family:'Inconsolata',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.75rem;background:transparent;border:1px solid rgba(192,152,72,0.25);color:#c09848;cursor:pointer;">Go to Menu</button>
+    </div>
+  </div>
+</div>
+
+<div id="wipe"></div>
+<div id="fx-red"></div>
+<div id="fx-dark"></div>
+
+<!-- ══ PRESENT ══ -->
+<div class="page active" id="page-present">
+  <div class="meta">
+    <span class="meta-loc">Harwick University · Edinburgh</span>
+    <span class="meta-ch">The Office · 18:47</span>
+    <span class="meta-date">14 Nov 2031</span>
+  </div>
+  <div class="scene">
+    <p class="p sr">The third-floor office of the Harwick University physics building has not changed in four hours. Same desk. Same lamp, amber, narrow. Same three monitors, two of them dark. Same cold coffee going colder in a mug that says WORLD'S WORST BOSS, a gift from a student that Oscar has kept because he finds it genuinely funny every single morning.</p>
+
+    <p class="p sr">DR. OSCAR ADKINS. 28. American. Chicago-born, Edinburgh-tenured since twenty-six. One hand pressed flat to his temple. The other moving a pen across a yellow legal pad in the unhurried automatic way of someone who is not writing but thinking, using the hand to stop the mind from running too far ahead.</p>
+
+    <p class="p sr">His wedding ring, a thin plain band of gold, catches the light every time he writes. He doesn't notice. He hasn't noticed in four years.</p>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-oscar-desk.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Harwick University · Department of Theoretical Astrophysics · 18:47</div>
+</div>
+
+    <div class="academic sr">
+      <span id="academic-text"></span><span id="typing-cursor" style="display:none;"></span>
+    </div>
+
+    <div class="sfx sr" id="sfx-door">[ SFX · Old door hinge. One long, slow creak. ]</div>
+
+    <p class="p sr">He doesn't look up.</p>
+    <p class="p sr">A pause. Precisely long enough to make a point. Then her phone, extended into the room.</p>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-bump.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Photo received · 18:48</div>
+</div>
+
+    <div class="photo sr">
+      <div class="photo-ph">
+        <div class="photo-ph-icon">📷</div>
+        <div class="photo-ph-lbl">Photo received · 18:48<br>Baby bump · warm side light</div>
+      </div>
+      <div class="photo-cap">Photo received · 18:48 · No caption. None needed.</div>
+    </div>
+
+    <p class="p sr" style="font-style:italic;font-size:0.94rem;">One hand on the curve. Unpainted nails. A thin white scar along the index finger. No caption. None needed.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia · from the doorway</div>
+      <div class="dl-line">"Oscar."</div>
+      <div class="dl-act">Not a question. Not a complaint. Just his name, placed in the air like a pin in a map. Here. This is where you are supposed to be looking.</div>
+    </div>
+
+    <p class="p sr">He looks up. Finally. And produces, automatically, privately, the smile he keeps for no one else on earth.</p>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-felicia-face.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Second photo · 18:48</div>
+</div>
+
+    <p class="p sr">FELICIA ADKINS. 28. Barefoot. Holding a mug of decaf. Eight months pregnant and carrying herself with the kind of quiet authority that has nothing to do with how loud you speak. Until eight months ago she worked for British intelligence, a unit so classified it has no public name and does not put its people's names anywhere a computer can find them. She is also one month older than Oscar. She has mentioned this forty-seven times.</p>
+
+    <div class="photo sr">
+      <div class="photo-ph">
+        <div class="photo-ph-icon">📸</div>
+        <div class="photo-ph-lbl">Second photo · 18:48<br>Her face · one eyebrow raised</div>
+      </div>
+      <div class="photo-cap">Second photo · 18:48 · The look that ends arguments before they begin.</div>
+    </div>
+
+    <p class="p sr" style="font-style:italic;font-size:0.94rem;">One eyebrow raised just far enough to say: I have already won this conversation. You just haven't been told yet.</p>
+
+    <p class="p sr">She crosses the room. Sits in his lap without asking, as though the chair was always built for two. One hand on her bump. The other on his cheek.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Your theory will still be wrong tomorrow. I, however, have a dinner reservation. And someone in here doing gymnastics against my ribcage who would like to sit somewhere warm and eat bread."</div>
+    </div>
+    <div class="dl sr">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Eyes already drifting back to the notepad.</div>
+      <div class="dl-line">"Ten minutes."</div>
+    </div>
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"You have been saying ten minutes for two hours."</div>
+    </div>
+
+    <p class="p sr">She reaches over. Closes the notepad. Closes the laptop. Looks at him straight on, the way she looks at things she has already decided about.</p>
+
+    <p class="p sr">He sighs. She kisses him, soft and unhurried, the kind of kiss that is also a verdict. Then she stands, smooths her dress, and walks to the door with the measured calm of someone who has spent years walking into rooms that might be dangerous and always walking out on her own terms.</p>
+
+    <p class="p sr">She does not look back.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Get ready. I'm waiting."</div>
+    </div>
+
+    <p class="p sr">Her footsteps in the corridor. Gone.</p>
+
+    <p class="p sr">He sits in the quiet she has left behind. Looks at the closed notepad. Looks at the ceiling. Lets out a long breath that has, in roughly equal measure: love, defeat, and something close to gratitude.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Getting up. Moving toward the bathroom. Almost smiling.</div>
+      <div class="dl-line">"Okay, love."</div>
+    </div>
+
+    <p class="p sr">The lamp stays on. The notepad stays closed. Outside the tall window, Edinburgh in November has started building clouds, heavy and grey, rolling in from the water with no hurry. The kind that don't threaten. They just arrive, and stay, and make the city feel smaller.</p>
+
+    <div class="div sr"><span>· · ·</span></div>
+
+    <p class="p sr">She is ready before him. This is how it always goes.</p>
+
+    <p class="p sr">Burgundy dress. Eight months along, and carrying it with more grace than she expected. She waits in the hallway with one hand on her bump, talking to it quietly, not baby talk but proper conversation, low and even, the way she has been doing for weeks.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-act">Watching the rain start against the window.</div>
+      <div class="dl-line">"Your father studies the shape of time itself and cannot find his own keys. You will need patience with him. I have some saved up. I'll leave instructions."</div>
+    </div>
+
+    <div class="sfx sr">[ SFX · Shower off. Bathroom door. Footsteps. ]</div>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-felicia-dress.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Felicia Adkins · Anniversary · 14 November 2031</div>
+</div>
+
+    <p class="p sr">He comes out in his blazer, collar slightly off. She crosses to him without being asked. Fixes the collar with both hands. Slow and deliberate, the way you do something you have done a thousand times and plan to do a thousand more.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"You look nice. Cleaned up."</div>
+    </div>
+    <div class="dl sr">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Looking at her the way he always does, like she is something he has not quite finished working out.</div>
+      <div class="dl-line">"You're beautiful."</div>
+    </div>
+
+    <p class="p sr">She laughs, rare and real and completely unguarded, and folds herself against his chest. As hard as she was with the rest of the world, she was exactly that soft with him. She let herself be held for eleven seconds. He knew better than to count out loud.</p>
+
+    <div class="dl sr">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"We should go."</div>
+    </div>
+    <div class="dl sr">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Yeah. Sure."</div>
+    </div>
+
+    <div class="div sr"><span>· · ·</span></div>
+
+    <p class="p sr">Before the car, before the rain, before everything that comes next, she stands at the bathroom mirror for one last moment. The dress. The bump. The small scar on her index finger. The earring that has always been just hers.</p>
+
+    <p class="p sr">And somewhere in that quiet, her mind does what minds do when the present gets too full to hold.</p>
+
+    <p class="p sr">It goes back.</p>
+
+    <div class="sr" style="text-align:center;padding:2rem 0 1rem;">
+      <button class="scene-btn" onclick="showPage('flashback')">Follow Felicia · Eight Years Earlier</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FLASHBACK ══ -->
+<div class="page" id="page-flashback">
+  <div class="meta">
+    <button class="meta-back" onclick="showPage('present')">← Back</button>
+    <span class="meta-ch">Memory · Eight Years Earlier</span>
+    <span class="meta-date">October 2023</span>
+  </div>
+  <div class="scene">
+    <p class="p sr">She hears it before she sees it.</p>
+    <p class="p sr">The flat near Grassmarket is loud the way only student parties manage, music and conversation and laughter all on top of each other. She has been leaning against the wall near the window for the better part of an hour, holding a drink she has barely touched, watching the room the way she has always watched rooms, though she does not yet have a word for why she does it.</p>
+    <p class="p-center sr">Exits. Crowd. Anything that does not fit.</p>
+
+    
+<div class="comic-panel sr ">
+  <img src="assets/images/img-party.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Edinburgh · Grassmarket · October 2023</div>
+</div><p class="p sr">She finds it near the far wall. Two men, broad and confident and the particular kind of drunk that takes up space on purpose, have moved close to two others. Close enough to mean something. Not close enough to be undeniable. Not yet.</p>
+
+    <p class="p sr">The first of the two being crowded is tall. American, she places it immediately from a single word she catches across the room, the vowels slightly too open for anyone raised here. He is standing very still in a way that is either fear or the exact opposite of it. She works out in seconds it is not fear. Beside him, shorter, British-Nigerian, jaw already set, is his friend. The friend has been ready since they walked in.</p>
+
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Jack. Leave it."</div></div>
+    <div class="dl sr"><div class="dl-spk">Jack</div><div class="dl-line">"They've been at it since we came through the door."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"I know. So we leave it."</div></div>
+
+    <p class="p sr">One of the two men steps slightly closer. Smiling.</p>
+
+    <div class="dl sr"><div class="dl-spk">Man</div><div class="dl-line">"How about a game of darts. Keep it friendly."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Not interested."</div></div>
+    <div class="dl sr"><div class="dl-spk">Man</div><div class="dl-line">"Scared?"</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Not interested."</div></div>
+    <div class="dl sr"><div class="dl-spk">Man</div><div class="dl-act">Already knowing how this would go.</div><div class="dl-line">"Your friend looks interested though."</div></div>
+
+    <p class="p sr">Jack is already looking at the board.</p>
+
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Jack. Don't. They've been practising on that board all night. This is exactly what they wanted when they came over. We play, we lose, they've had their fun."</div></div>
+    <div class="dl sr"><div class="dl-spk">Jack</div><div class="dl-line">"Or we play and we don't lose."</div></div>
+
+    <p class="p sr">A silence between them, the kind that carries a whole argument in four seconds, the way only old friends manage.</p>
+
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Five years. Jack. You're a problem."</div></div>
+    <div class="dl sr"><div class="dl-spk">Jack</div><div class="dl-line">"You in?"</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-act">A pause. Shorter this time.</div><div class="dl-line">"I'm in."</div></div>
+
+    <div class="div sr"><span>· The Game ·</span></div>
+
+    <p class="p sr">The crowd drifts over without deciding to. The two men throw first and they are good at this, solid scores, comfortable on a board they know well. The people watching make the noise of people who think they have already seen the best of the evening.</p>
+
+    <p class="p sr">Jack steps up. Rolls his shoulders. First dart catches the inner ring. Good. Second dart misses, clean and undeniable. Third does better but still not enough. Jack steps back with the look of a man having a private argument with physics.</p>
+
+    <p class="p sr">Oscar picks up his darts.</p>
+
+    <p class="p sr">He steps to the line and stops. Does not shift his weight, does not roll his wrist, does not do any of the small rituals people use to tell themselves they are ready. He is just still. The way he is still at a desk at four in the morning. He looks at the board the way she has noticed he looks at things he is genuinely thinking about.</p>
+
+    <div class="sfx sr">[ the room gets quieter than a party room has any right to be ]</div>
+
+    <p class="p sr">He throws his first dart.</p>
+    <p class="p-center sr">Inner ring. Clean.</p>
+    <p class="p sr">He picks up the second. Same pace, same stillness. Throws.</p>
+    <p class="p-center sr">Inner ring. Again.</p>
+
+    <p class="p sr">The crowd makes a sound, not cheering, more like the involuntary exhale of a room watching something settle into exactly the shape it was always going to take. Oscar picks up the third dart.</p>
+
+    <div class="sfx sr">[ completely quiet now ]</div>
+    <p class="p sr">He throws.</p>
+
+    
+<div class="comic-panel sr ">
+  <img src="assets/images/img-dart-bullseye.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Bullseye · Third dart · Dead centre</div>
+</div><div class="bullseye sr">
+      <div class="bullseye-word">BULLSEYE.</div>
+      <div class="bullseye-note">Dead centre. The board makes a different sound when something lands exactly where it was always going to.</div>
+    </div>
+
+    <p class="p sr">The two men look at the board for a long time. Then at each other. Then find somewhere else to be.</p>
+
+    <div class="dl sr"><div class="dl-spk">Jack</div><div class="dl-line">"What was that."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Darts."</div></div>
+    <div class="dl sr"><div class="dl-spk">Jack</div><div class="dl-line">"Five years. Five years I have known you."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"You never asked."</div></div>
+
+    <div class="div sr"><span>· · ·</span></div>
+
+    <p class="p sr">She finishes her drink. Sets the glass down. Crosses the room at her own pace, not rushing, because she has already decided where she is going.</p>
+    <p class="p sr">He notices her coming. Does not change his posture or expression. Just waits, with the patience of someone who has a private understanding with time.</p>
+
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"That was either very brave or very stupid."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Jack's decision was brave. My agreeing was probably stupid. The throwing was fine."</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"You're very calm for someone who almost had his face rearranged twenty minutes ago."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Fighting is loud. I prefer precision."</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"Is that a general rule or just for tonight?"</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Both, I think."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"You've been against that wall all night."</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"So were you."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Different reasons, probably."</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"Probably."</div></div>
+
+    
+<div class="comic-panel sr ">
+  <img src="assets/images/img-first-meeting.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">The night it became something</div>
+</div><p class="p sr">A pause that does not need filling.</p>
+
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-act">Extending his hand.</div><div class="dl-line">"Oscar."</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-act">Taking it.</div><div class="dl-line">"Felicia."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Are you enjoying the party, Felicia?"</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-act">Looking around once. A proper assessment. Looking back.</div><div class="dl-line">"I am now."</div></div>
+
+    <p class="p sr">He smiles. Small, private, the one nobody else gets. He does not know yet that she will be the only person who ever receives it. Neither does she.</p>
+    <p class="p-center sr">But the universe, apparently, already had plans for them.</p>
+
+    <div class="div sr"><span>· The Months That Followed ·</span></div>
+
+    <p class="p sr">They did not swap numbers that night. They did not need to. The same library three days later. The same coffee queue twice in one week. A lecture she had no reason to attend and found him in the third row. A bookshop on Victoria Street on a rainy Thursday, where he was reading the exact book she had returned the week before, and they both noticed at the same moment, and neither spoke for a second, and then both spoke at once, and laughed.</p>
+    <p class="p-center sr">That was the moment. That was when it became something.</p>
+
+    <p class="p sr">Dinner that Friday. Then a long walk along the Water of Leith at midnight, no particular destination, the city quiet and lit orange around them. More dinners. More walks. Conversations that started in one part of Edinburgh and ended somewhere else entirely.</p>
+
+    <p class="p sr">Three months in, one night, they slept together for the first time. Unhurried. Certain. The way things happen when two people have been circling something long enough that finally going there feels less like a decision and more like an arrival. It was the best night of her life. She did not say this out loud for another six months, and then only once, quietly, in the dark.</p>
+
+    <div class="div sr"><span>· 2025 · The Divergence ·</span></div>
+
+    <p class="p sr">He enrolled in his PhD. Theoretical Astrophysics. Harwick University. She had other plans.</p>
+    <p class="p sr">Felicia joined VEIL-9. British intelligence, a division so classified it has no public name, no press releases, and does not put its people in any database a civilian could find. She trained for eleven months. Passed at twenty-two. Youngest in her intake. She became very good at her job: controlled under pressure, precise when being imprecise could mean not coming home. She worked in cities she could not name afterward, in four languages, leaving no trace in rooms she was sent to enter.</p>
+    <p class="p sr">And every time she came home, he was there. Reading. Making dinner. Not asking about the parts she could not share. Keeping the shape of their life steady while she moved through harder rooms.</p>
+    <p class="p-center sr">She never asked him to do that. He never explained why he did.</p>
+
+    <div class="div sr"><span>· 2027 · The Wedding ·</span></div>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-wedding.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">June 2027 · Georgian Hall · Edinburgh New Town</div>
+</div>
+
+    <div class="photo sr">
+      <div class="photo-ph">
+        <div class="photo-ph-icon">💐</div>
+        <div class="photo-ph-lbl">The Wedding · June 2027<br>Edinburgh New Town</div>
+      </div>
+      <div class="photo-cap">June 2027 · Both twenty-four · She wore no veil. He wore no tie.</div>
+    </div>
+
+    <p class="p sr">June. Both twenty-four. A restored Georgian hall in Edinburgh's New Town, tall windows and stone floors and everyone who mattered filling it. His family flew in from Chicago. His mother arrived in a dress the colour of deep amber that made the room feel warmer. Her mother had been crying since somewhere around Newcastle and was still going when the ceremony started. Her father shook Oscar's hand for a long time outside the venue, said very little, and meant a great deal.</p>
+    <p class="p sr">Jack was best man. His speech was funny in the first half and sharper than anyone expected in the second. Near midnight they found a corner near one of the tall windows and stood there together without talking, looking out at Edinburgh in June, saying nothing.</p>
+    <p class="p-center sr">That quiet moment was probably the best one of the whole night.</p>
+    <p class="p sr">The photo on their mantelpiece shows them both mid-laugh at something the photographer said. Neither of them remember what it was. She is one month older. She has mentioned it forty-seven times.</p>
+
+    <div class="div sr"><span>· March 2031 · Eight Months Ago ·</span></div>
+
+    <div class="photo sr">
+      <div class="photo-ph">
+        <div class="photo-ph-icon">🤰</div>
+        <div class="photo-ph-lbl">A Tuesday · March 2031<br>The morning everything changed</div>
+      </div>
+      <div class="photo-cap">March 2031 · Eight months ago · She sat on the bathroom floor for twenty-two minutes.</div>
+    </div>
+
+    <p class="p sr">A Tuesday. She found out and sat on the bathroom floor for twenty-two minutes, running through it the way she ran through operational decisions. Variables. What changes. How a life reorganises itself around something new at the centre of it. She came to no conclusion. So she went and told him.</p>
+    
+<div class="comic-panel sr">
+  <img src="assets/images/img-pregnancy.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">March 2031 · A Tuesday morning</div>
+</div>
+    <p class="p sr">He put his coffee down. Looked at her properly. Then stood, put both hands on her face, and said</p>
+
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-act">Not to the bump. To her.</div><div class="dl-line">"Hello."</div></div>
+
+    <p class="p sr">She did one more month of active work, then resigned. Filed the commendation without reading it. Walked out of the building on a grey Tuesday morning and took the bus home.</p>
+    <p class="p-center sr">She has not thought about VEIL-9 since. Or so she tells herself.</p>
+
+    <div class="sr" style="text-align:center;padding:2rem 0 1rem;">
+      <button class="scene-btn" onclick="showPage('drive')">Back to the Present · November 2031</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DRIVE / CRASH ══ -->
+<div class="page" id="page-drive">
+  <div class="meta">
+    <button class="meta-back" onclick="showPage('flashback')">← Back</button>
+    <span class="meta-ch">The Drive · 19:14</span>
+    <span class="meta-date">14 Nov 2031</span>
+  </div>
+  <div class="scene">
+    <p class="p sr">His car. The battered Volvo she has suggested replacing three times. He drives. She navigates. The city slides past, Old Town spires and wet cobblestones catching headlights, then the quieter southside roads, then Edinburgh starting to thin at its own edges.</p>
+
+    <div class="sfx sr">[ SFX · Rain. Heavy. Wipers at full. Traffic building. ]</div>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-road-pov.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  <div class="comic-panel-caption">Route 9 · Edinburgh Southside · 21:03</div>
+</div>
+
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-act">Watching the map. Watching the clock.</div><div class="dl-line">"We're ten minutes behind. The reservation holds until half seven."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Traffic's"</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-act">Pulling the route up herself. It goes south, through a stretch where the streetlights thin and hedgerows close in.</div><div class="dl-line">"I know. There's a shortcut. Both main routes are blocked. Here, turn on Maps."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-line">"Is it a dirt road?"</div></div>
+    <div class="dl sr"><div class="dl-spk">Felicia</div><div class="dl-line">"It's a road. Trust me."</div></div>
+    <div class="dl sr"><div class="dl-spk">Oscar</div><div class="dl-act">Indicating left. No hesitation. He has never hesitated when she says trust me. Not once in eight years.</div><div class="dl-line">"I always trust you."</div></div>
+
+    <div class="crash-block sr">
+      <div class="rain">/ / / / / / / / / / / / / / / / / / / / / / / / / / /</div>
+      <p class="p crash-p">The road narrows. The city drops away completely. Only dark hedgerow on both sides, the sound of water hammering the roof, headlights finding twenty feet of road and nothing beyond. The map gives directions calmly. The rain is past inconvenience, into something that feels deliberate.</p>
+      <p class="p crash-p">The road bends left. The Volvo does forty. He watches the white line. She watches the map. The reservation will be gone if they do not</p>
+      <div class="rain">/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /</div>
+
+      <div class="sfx-red sr">[ SFX · Headlights. Oncoming. Wrong side. No warning. ]</div>
+
+      <p class="p sr" style="line-height:2.3;color:#c8b4a0;">
+        <strong style="color:#e0d4bc;">A figure.</strong><br>
+        Standing in the road.<br>
+        Not a car. Not an animal. A person.<br>
+        Completely still. In the dark. In the rain.<br>
+        Not caught off guard. Not frozen.<br>
+        <em>Waiting.</em>
+      </p>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-figure.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  
+</div>
+
+      <div class="impact impact-w sr">SWERVE</div>
+      <div class="rain sr" style="opacity:0.12;">/ / / / / / / / / / / / /</div>
+      <div class="impact impact-r sr" id="el-roll">ROLL.</div>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-crash.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  
+</div>
+
+      <div class="sfx-red sr">[ SFX · Metal folding. Glass. The world on its side. Then nothing. ]</div>
+
+      <p class="p crash-p sr">The shape of the car becomes something unrecognisable. Glass moves in slow motion the way it does when the mind cannot keep up with the speed. Gravity picks a new direction. The map continues, calm and precise, giving directions to a place they will not reach tonight.</p>
+
+      <p class="p crash-p sr">She is conscious for</p>
+      <p class="p crash-p-dark sr">seconds. Long enough to turn her head.</p>
+      <p class="p crash-p-dark sr">Long enough to see him.</p>
+<div class="comic-panel sr ">
+  <img src="assets/images/img-oscar-limp.png" alt="" loading="lazy" onload="this.classList.add('loaded')">
+  
+</div>
+      <p class="p sr" style="color:#5a5040;font-style:italic;">A shape. Against the steering column.</p>
+      <p class="p sr" style="color:#4a4030;font-style:italic;text-align:center;letter-spacing:0.1em;">Still.</p>
+      <p class="p sr" style="color:#3a3020;font-style:italic;text-align:center;letter-spacing:0.1em;">Limp.</p>
+
+      <div class="crash-label sr" id="el-oscar">Oscar</div>
+      <p class="p sr" style="text-align:center;color:#5a5040;font-style:italic;font-size:0.92rem;margin-top:1.2rem;">Then nothing at all.</p>
+    </div>
+
+    <div class="end-block sr">
+      <div class="end-label">End of Prologue</div>
+      <div class="end-quote">
+        "She will not remember the figure in the road<br>
+        for another three weeks.<br>
+        And then she will not be able to stop."
+      </div>
+      <div class="end-meta">
+        VEIL-9 · Episode I · When Stars Collide<br>
+        Edinburgh, Scotland · November 2031<br>
+        Felicia Adkins · Oscar Adkins<br>
+        <span style="color:#6a1818;opacity:1;">Chapter One · Incoming</span>
+      </div>
+      <!-- SAVE PROMPT -->
+      <div id="save-prompt" class="save-prompt">
+        <div class="save-prompt-label">Save your progress?</div>
+        <div class="save-prompt-sub">Your prologue completion will be recorded and Chapter 1 will be unlocked.</div>
+        <div class="save-prompt-btns">
+          <button class="save-btn save-btn-yes" onclick="savePrologue()">Save &amp; Return to Menu</button>
+          <button class="save-btn save-btn-no" onclick="goToMenu()">Return Without Saving</button>
+        </div>
+      </div>
+      <div id="save-done" style="display:none;" class="save-done">
+        <div class="save-done-icon">✓</div>
+        <div class="save-done-text">Progress Saved · Chapter 1 Unlocked</div>
+        <button class="save-btn save-btn-yes" onclick="goToMenu()">Return to Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// ENGINE — clean, minimal, no jank
+// ══════════════════════════════════
+
+// ── THEME MAP ──
+const THEMES = {
+  present:   'theme-present',
+  flashback: 'theme-flashback',
+  drive:     'theme-drive'
+};
+
+const WIPE_COLORS = {
+  present:   '#0c0906',
+  flashback: '#f2e8d4',
+  drive:     '#090604'
+};
+
+// ── STATE ──
+let activePage = 'present';
+let transitioning = false;
+
+// ══════════════════════════════════
+// AUDIO ENGINE
+// ══════════════════════════════════
+let actx = null;
+let audioUnlocked = false;
+let rainNode = null;
+let rainGain = null;
+
+function audio() {
+  if (!actx) {
+    try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  }
+  return actx;
+}
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  const a = audio();
+  if (!a) return;
+  if (a.state === 'suspended') {
+    a.resume().then(() => { audioUnlocked = true; });
+  } else {
+    audioUnlocked = true;
+  }
+}
+window.addEventListener('scroll', unlockAudio, { once: true, passive: true });
+window.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+window.addEventListener('click', unlockAudio, { once: true });
+
+// ── HELPER: make noise buffer ──
+function noiseBuffer(a, dur) {
+  const b = a.createBuffer(1, a.sampleRate * dur, a.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return b;
+}
+
+// ── TYPEWRITER CLICK ──
+function playClick() {
+  const a = audio(); if (!a) return;
+  try {
+    const b = a.createBuffer(1, Math.floor(a.sampleRate * 0.012), a.sampleRate);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1)*(1-i/d.length)*0.15;
+    const s = a.createBufferSource(); s.buffer = b;
+    const g = a.createGain(); g.gain.value = 0.32;
+    s.connect(g); g.connect(a.destination); s.start();
+  } catch(e){}
+}
+
+// ── DOOR CREAK ──
+function playCreak() {
+  const a = audio(); if (!a) return;
+  try {
+    const dur = 2.0, sr = a.sampleRate;
+    const b = a.createBuffer(1, sr*dur, sr);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const t = i/sr;
+      const env = Math.pow(Math.sin(Math.PI*t/dur), 0.4) * 0.7;
+      const freq = 140 + Math.sin(t*1.2)*30;
+      d[i] = (
+        Math.sin(t*freq*2*Math.PI + Math.sin(t*28)*1.2) * 0.35 +
+        Math.sin(t*freq*3*Math.PI) * 0.12 +
+        (Math.random()*2-1) * 0.04
+      ) * env;
+    }
+    const s = a.createBufferSource(); s.buffer = b;
+    const f = a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=320; f.Q.value=1.5;
+    const g = a.createGain(); g.gain.value = 0.22;
+    s.connect(f); f.connect(g); g.connect(a.destination); s.start();
+  } catch(e){}
+}
+
+// ── RAIN (looping ambient) ──
+function startRain(volume = 0.38) {
+  const a = audio(); if (!a) return;
+  try {
+    stopRain();
+    // White noise source
+    const bufDur = 3;
+    const buf = noiseBuffer(a, bufDur);
+    rainNode = a.createBufferSource();
+    rainNode.buffer = buf;
+    rainNode.loop = true;
+
+    // Shape rain: highpass removes rumble, lowpass softens hiss
+    const hp = a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=400;
+    const lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=8000;
+
+    rainGain = a.createGain();
+    rainGain.gain.setValueAtTime(0, a.currentTime);
+    rainGain.gain.linearRampToValueAtTime(volume, a.currentTime + 2.5);
+
+    rainNode.connect(hp); hp.connect(lp); lp.connect(rainGain); rainGain.connect(a.destination);
+    rainNode.start();
+  } catch(e){}
+}
+
+function stopRain(fadeTime = 2.5) {
+  const a = audio(); if (!a) return;
+  try {
+    if (rainGain) {
+      rainGain.gain.linearRampToValueAtTime(0, a.currentTime + fadeTime);
+      setTimeout(() => { try { rainNode && rainNode.stop(); } catch(e){} }, (fadeTime+0.1)*1000);
+      rainNode = null; rainGain = null;
+    }
+  } catch(e){}
+}
+
+// ── THUNDER ──
+function playThunder(delay = 0) {
+  const a = audio(); if (!a) return;
+  setTimeout(() => {
+    try {
+      const dur = 3.5, sr = a.sampleRate;
+      const b = a.createBuffer(1, sr*dur, sr);
+      const d = b.getChannelData(0);
+      for (let i = 0; i < d.length; i++) {
+        const t = i/sr;
+        // Sharp attack, long rumbling decay
+        const env = t < 0.08
+          ? t/0.08
+          : Math.exp(-(t-0.08)*1.1);
+        const rumble = Math.sin(t*28*2*Math.PI)*0.4 +
+                       Math.sin(t*18*2*Math.PI)*0.3 +
+                       Math.sin(t*12*2*Math.PI)*0.2;
+        d[i] = (rumble + (Math.random()*2-1)*0.25) * env;
+      }
+      const s = a.createBufferSource(); s.buffer = b;
+      const lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=280;
+      const g = a.createGain(); g.gain.value = 0.55;
+      s.connect(lp); lp.connect(g); g.connect(a.destination); s.start();
+    } catch(e){}
+  }, delay);
+}
+
+// ── CROWD MURMUR ──
+let crowdNode = null;
+let crowdGain = null;
+function startCrowd() {
+  const a = audio(); if (!a) return;
+  try {
+    stopCrowd();
+    const buf = noiseBuffer(a, 4);
+    crowdNode = a.createBufferSource();
+    crowdNode.buffer = buf; crowdNode.loop = true;
+
+    // Multiple bandpass filters to simulate voices
+    const bp1 = a.createBiquadFilter(); bp1.type='bandpass'; bp1.frequency.value=320; bp1.Q.value=0.8;
+    const bp2 = a.createBiquadFilter(); bp2.type='bandpass'; bp2.frequency.value=680; bp2.Q.value=0.6;
+    const bp3 = a.createBiquadFilter(); bp3.type='bandpass'; bp3.frequency.value=1200; bp3.Q.value=0.5;
+
+    const merge = a.createGain(); merge.gain.value = 0.33;
+    crowdGain = a.createGain();
+    crowdGain.gain.setValueAtTime(0, a.currentTime);
+    crowdGain.gain.linearRampToValueAtTime(0.28, a.currentTime + 1.8);
+
+    crowdNode.connect(bp1); crowdNode.connect(bp2); crowdNode.connect(bp3);
+    bp1.connect(merge); bp2.connect(merge); bp3.connect(merge);
+    merge.connect(crowdGain); crowdGain.connect(a.destination);
+    crowdNode.start();
+  } catch(e){}
+}
+function stopCrowd(fadeTime = 1.5) {
+  const a = audio(); if (!a) return;
+  try {
+    if (crowdGain) {
+      crowdGain.gain.linearRampToValueAtTime(0, a.currentTime + fadeTime);
+      setTimeout(() => { try { crowdNode && crowdNode.stop(); } catch(e){} }, (fadeTime+0.1)*1000);
+      crowdNode = null; crowdGain = null;
+    }
+  } catch(e){}
+}
+
+// ── DART HIT ──
+function playDart() {
+  const a = audio(); if (!a) return;
+  try {
+    // Thwack: sharp transient + short resonance
+    const dur = 0.18, sr = a.sampleRate;
+    const b = a.createBuffer(1, sr*dur, sr);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const t = i/sr;
+      const env = Math.exp(-t*28);
+      d[i] = ((Math.random()*2-1)*0.6 + Math.sin(t*1800*2*Math.PI)*0.4) * env;
+    }
+    const s = a.createBufferSource(); s.buffer = b;
+    const hp = a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=900;
+    const g = a.createGain(); g.gain.value = 0.45;
+    s.connect(hp); hp.connect(g); g.connect(a.destination); s.start();
+  } catch(e){}
+}
+
+// ── GIGGLE ──
+function playGiggle() {
+  const a = audio(); if (!a) return;
+  try {
+    // Synthesize a soft warm laugh — short bursts of pitched breath
+    const sr = a.sampleRate;
+    const bursts = [0, 0.12, 0.22, 0.30, 0.36];
+    bursts.forEach((start, idx) => {
+      const dur = 0.09 + idx * 0.01;
+      const b = a.createBuffer(1, sr*dur, sr);
+      const d = b.getChannelData(0);
+      const pitch = 520 + idx * 40 + Math.random()*60;
+      for (let i = 0; i < d.length; i++) {
+        const t = i/sr;
+        const env = Math.sin(Math.PI*t/dur);
+        d[i] = (
+          Math.sin(t*pitch*2*Math.PI)*0.35 +
+          Math.sin(t*pitch*1.5*2*Math.PI)*0.15 +
+          (Math.random()*2-1)*0.08
+        ) * env * 0.4;
+      }
+      const s = a.createBufferSource(); s.buffer = b;
+      const lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3200;
+      const hp = a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=200;
+      const g = a.createGain(); g.gain.value = 0.5;
+      s.connect(lp); lp.connect(hp); hp.connect(g); g.connect(a.destination);
+      s.start(a.currentTime + start);
+    });
+  } catch(e){}
+}
+
+// ── TYRE SCREECH ──
+function playScreech() {
+  const a = audio(); if (!a) return;
+  try {
+    const dur = 1.1, sr = a.sampleRate;
+    const b = a.createBuffer(1, sr*dur, sr);
+    const d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const t = i/sr;
+      // Screech: band-limited noise with pitch that drops
+      const freq = 2800 - t * 1800;
+      const env = t < 0.05 ? t/0.05 : Math.exp(-(t-0.05)*1.8);
+      d[i] = (
+        Math.sin(t*freq*2*Math.PI + Math.sin(t*180)*2.5) * 0.5 +
+        (Math.random()*2-1) * 0.35
+      ) * env;
+    }
+    const s = a.createBufferSource(); s.buffer = b;
+    const bp = a.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2200; bp.Q.value=1.2;
+    const g = a.createGain(); g.gain.value = 0.5;
+    s.connect(bp); bp.connect(g); g.connect(a.destination); s.start();
+  } catch(e){}
+}
+
+// ── CRASH IMPACT ──
+function playCrashImpact() {
+  const a = audio(); if (!a) return;
+  try {
+    // Low boom + metal crunch + glass
+    const dur = 2.2, sr = a.sampleRate;
+    const b = a.createBuffer(2, sr*dur, sr);
+
+    // Left: low boom
+    const dL = b.getChannelData(0);
+    // Right: metal crunch
+    const dR = b.getChannelData(1);
+
+    for (let i = 0; i < sr*dur; i++) {
+      const t = i/sr;
+      const boomEnv = t < 0.06 ? t/0.06 : Math.exp(-(t-0.06)*2.2);
+      const metalEnv = t < 0.04 ? t/0.04 : Math.exp(-(t-0.04)*3.5);
+      const glassEnv = t > 0.08 ? Math.exp(-(t-0.08)*4) : 0;
+
+      const boom = (Math.sin(t*42*2*Math.PI)*0.5 + Math.sin(t*28*2*Math.PI)*0.3 + (Math.random()*2-1)*0.3) * boomEnv;
+      const metal = (Math.random()*2-1) * metalEnv * 0.55;
+      const glass = (Math.random()*2-1) * glassEnv * 0.3;
+
+      dL[i] = boom * 0.7 + metal * 0.3;
+      dR[i] = metal * 0.5 + glass * 0.6 + boom * 0.4;
+    }
+
+    const s = a.createBufferSource(); s.buffer = b;
+    const g = a.createGain(); g.gain.value = 0.7;
+    s.connect(g); g.connect(a.destination); s.start();
+  } catch(e){}
+}
+
+// ── TYPEWRITER ──
+const ACADEMIC = `While the inflationary model accounts for the initial homogeneity of the cosmic microwave background, the localized perturbations observed in the late-stage expansion phase suggest that the vacuum energy density may not be a true constant, but rather a dynamical scalar field that evolves over cosmological time, what some have termed a quintessence field, wherein the equation of state parameter w deviates measurably from negative one, implying a universe that is not merely expanding, but choosing.`;
+
+// ── SOUND TRIGGER FLAGS ──
+let twStarted = false;
+let creakPlayed = false;
+let crowdStarted = false;
+let rainStarted = false;
+let dart1Played = false;
+let dart2Played = false;
+let dart3Played = false;
+let gigglePlayed = false;
+let thunderScheduled = false;
+
+function startTypewriter() {
+  if (twStarted) return;
+  twStarted = true;
+  const el = document.getElementById('academic-text');
+  const cur = document.getElementById('typing-cursor');
+  if (!el || !cur) return;
+  cur.style.display = 'inline-block';
+  const words = ACADEMIC.split(' ');
+  let wi = 0, ci = 0, txt = '';
+  function next() {
+    if (wi >= words.length) { cur.style.display='none'; return; }
+    const w = words[wi];
+    if (ci < w.length) {
+      txt += w[ci++];
+      el.textContent = txt;
+      if (Math.random()>0.3) playClick();
+      setTimeout(next, 28+Math.random()*18);
+    } else {
+      txt += ' '; el.textContent = txt;
+      ci = 0; wi++;
+      setTimeout(next, 55+Math.random()*30);
+    }
+  }
+  setTimeout(next, 200);
+}
+
+// ── SCROLL REVEAL ──
+// Simple, no IntersectionObserver — use scroll event with throttle
+let rafPending = false;
+let revealEls = [];
+
+function collectReveal() {
+  const page = document.getElementById('page-' + activePage);
+  if (!page) return;
+  revealEls = Array.from(page.querySelectorAll('.sr:not(.on)'));
+}
+
+function checkReveal() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    const vh = window.innerHeight;
+    let i = 0;
+    while (i < revealEls.length) {
+      const el = revealEls[i];
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh - 40) {
+        el.classList.add('on');
+
+        // Special triggers
+        if (!twStarted && el.querySelector && el.querySelector('#academic-text')) {
+          setTimeout(startTypewriter, 250);
+        }
+        // Door creak
+        if (!creakPlayed && el.textContent && el.textContent.indexOf('door hinge') !== -1) {
+          creakPlayed = true;
+          setTimeout(playCreak, 350);
+        }
+        // Crowd starts when party scene appears
+        if (!crowdStarted && el.textContent && el.textContent.indexOf('Grassmarket is loud') !== -1) {
+          crowdStarted = true;
+          setTimeout(startCrowd, 400);
+        }
+        // Dart 1 — inner ring
+        if (!dart1Played && el.textContent && el.textContent.indexOf('Inner ring. Clean') !== -1) {
+          dart1Played = true;
+          setTimeout(playDart, 200);
+        }
+        // Dart 2 — inner ring again
+        if (!dart2Played && el.textContent && el.textContent.indexOf('Inner ring. Again') !== -1) {
+          dart2Played = true;
+          setTimeout(playDart, 200);
+        }
+        // Dart 3 — BULLSEYE
+        if (!dart3Played && el.classList && el.classList.contains('bullseye')) {
+          dart3Played = true;
+          setTimeout(playDart, 300);
+          // Crowd reacts — brief swell
+          setTimeout(() => {
+            if (crowdGain) {
+              const a = audio();
+              if (a) {
+                crowdGain.gain.linearRampToValueAtTime(0.55, a.currentTime + 0.3);
+                setTimeout(() => {
+                  if (crowdGain) crowdGain.gain.linearRampToValueAtTime(0.22, a.currentTime + 1.5);
+                }, 800);
+              }
+            }
+          }, 400);
+        }
+        // Crowd fades when leaving flashback (cosmos line)
+        if (el.textContent && el.textContent.indexOf('already had plans') !== -1) {
+          stopCrowd(2.0);
+        }
+        // Giggle — when she laughs against his chest
+        if (!gigglePlayed && el.textContent && el.textContent.indexOf('rare and real and completely unguarded') !== -1) {
+          gigglePlayed = true;
+          setTimeout(playGiggle, 600);
+        }
+        // Rain starts when drive begins
+        if (!rainStarted && el.textContent && el.textContent.indexOf('Rain. Heavy') !== -1) {
+          rainStarted = true;
+          setTimeout(() => startRain(0.42), 300);
+          // Schedule thunder 2 and 5 seconds in
+          if (!thunderScheduled) {
+            thunderScheduled = true;
+            setTimeout(() => playThunder(), 2000);
+            setTimeout(() => playThunder(), 5500);
+            setTimeout(() => playThunder(), 9000);
+          }
+        }
+        // Crash
+        if (el.id === 'el-roll') {
+          setTimeout(doCrash, 80);
+        }
+
+        revealEls.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+  });
+}
+
+window.addEventListener('scroll', checkReveal, { passive: true });
+
+// ── CRASH EFFECTS ──
+let crashDone = false;
+function doCrash() {
+  if (crashDone) return;
+  crashDone = true;
+
+  const red = document.getElementById('fx-red');
+  const dark = document.getElementById('fx-dark');
+
+  // 1. Tyre screech immediately
+  playScreech();
+
+  // 2. Shake + crash impact after 0.9s (screech then impact)
+  setTimeout(() => {
+    document.body.style.animation = 'none';
+    document.body.offsetHeight;
+    document.body.style.cssText += ';animation:bodyshake 0.45s ease both;';
+    playCrashImpact();
+  }, 900);
+
+  // 3. Red bleed
+  setTimeout(() => {
+    red.style.transition = 'opacity 0.4s ease';
+    red.style.opacity = '1';
+    setTimeout(() => {
+      red.style.transition = 'opacity 2.5s ease';
+      red.style.opacity = '0';
+    }, 800);
+  }, 1100);
+
+  // 4. Rain fades out after crash
+  setTimeout(() => stopRain(3.0), 1500);
+
+  // 5. Dark fade when "Oscar" label appears
+  const oscarEl = document.getElementById('el-oscar');
+  if (oscarEl) {
+    const check = setInterval(() => {
+      if (oscarEl.classList.contains('on')) {
+        clearInterval(check);
+        setTimeout(() => {
+          dark.style.transition = 'opacity 2.8s ease';
+          dark.style.opacity = '1';
+          setTimeout(() => {
+            dark.style.transition = 'opacity 2s ease';
+            dark.style.opacity = '0';
+          }, 3200);
+        }, 1000);
+      }
+    }, 200);
+  }
+}
+
+// Body shake keyframes injected dynamically to avoid style block overhead
+const shakeKF = document.createElement('style');
+shakeKF.textContent = `@keyframes bodyshake{0%,100%{transform:none}15%{transform:translate(-4px,2px)}30%{transform:translate(3px,-3px)}45%{transform:translate(-2px,4px)}60%{transform:translate(4px,-1px)}75%{transform:translate(-3px,2px)}}`;
+document.head.appendChild(shakeKF);
+
+// ── PAGE TRANSITIONS ──
+function showPage(id) {
+  if (transitioning || id === activePage) return;
+  transitioning = true;
+
+  const wipe = document.getElementById('wipe');
+  const fromPage = document.getElementById('page-' + activePage);
+  const toPage   = document.getElementById('page-' + id);
+  if (!toPage) { transitioning = false; return; }
+
+  // Set wipe color for destination
+  wipe.style.background = WIPE_COLORS[id] || '#0c0906';
+  wipe.style.transition = 'opacity 0.55s ease';
+
+  // Force layout then fade in wipe
+  wipe.getBoundingClientRect();
+  wipe.style.opacity = '1';
+
+  setTimeout(() => {
+    // Swap pages
+    if (fromPage) fromPage.classList.remove('active');
+    toPage.classList.add('active');
+
+    // Swap body theme
+    Object.values(THEMES).forEach(t => document.body.classList.remove(t));
+    document.body.classList.add(THEMES[id] || 'theme-title');
+
+    activePage = id;
+    window.scrollTo(0, 0);
+
+    // Ambient sound management on page switch
+    const fromId = fromPage ? fromPage.id.replace('page-','') : '';
+    if (fromId === 'flashback') stopCrowd(1.5);
+    if (id === 'drive' && !rainStarted) {
+      rainStarted = true;
+      setTimeout(() => startRain(0.42), 800);
+      if (!thunderScheduled) {
+        thunderScheduled = true;
+        setTimeout(() => playThunder(), 2500);
+        setTimeout(() => playThunder(), 6200);
+      }
+    }
+
+    // Collect new reveal elements
+    collectReveal();
+    // Immediately check what's already visible
+    checkReveal();
+
+    // Fade wipe out
+    setTimeout(() => {
+      wipe.style.transition = 'opacity 0.55s ease';
+      wipe.style.opacity = '0';
+      setTimeout(() => { transitioning = false; }, 600);
+    }, 60);
+  }, 580);
+}
+
+// Initial check on load
+// Mark prologue as started in save on load
+(function() {
+  try {
+    const raw = localStorage.getItem('traces_save_v1');
+    if (raw) {
+      const s = JSON.parse(raw);
+      s.currentChapter = 'prologue';
+      s.currentScene = 'reading';
+      s.updated = Date.now();
+      localStorage.setItem('traces_save_v1', JSON.stringify(s));
+    }
+  } catch(e) {}
+})();
+
+window.addEventListener('load', () => {
+  collectReveal();
+  checkReveal();
+});
+
+// ── SAVE & MENU FUNCTIONS ──
+const SAVE_KEY = 'traces_save_v1';
+
+function savePrologue() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    let save = raw ? JSON.parse(raw) : {
+      version: 1,
+      created: Date.now(),
+      currentChapter: 'prologue',
+      currentScene: 'start',
+      unlockedChapters: ['prologue'],
+      completedChapters: [],
+      settings: { sound: true, motion: false, textSize: 2 },
+      choices: {},
+      chapterSaves: {}
+    };
+    // Mark prologue complete, unlock chapter 1
+    if (!save.completedChapters) save.completedChapters = [];
+    if (!save.completedChapters.includes('prologue')) {
+      save.completedChapters.push('prologue');
+    }
+    if (!save.unlockedChapters) save.unlockedChapters = ['prologue'];
+    if (!save.unlockedChapters.includes('ch1')) {
+      save.unlockedChapters.push('ch1');
+    }
+    if (!save.chapterSaves) save.chapterSaves = {};
+    save.chapterSaves['prologue'] = Date.now();
+    save.currentChapter = 'ch1';
+    save.currentScene = 'start';
+    save.updated = Date.now();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+
+    // Show confirmation
+    document.getElementById('save-prompt').style.display = 'none';
+    document.getElementById('save-done').style.display = 'block';
+  } catch(e) {
+    goToMenu();
+  }
+}
+
+function goToMenu() {
+  const wipe = document.getElementById('wipe');
+  wipe.style.background = '#060709';
+  wipe.style.transition = 'opacity 0.7s ease';
+  wipe.getBoundingClientRect();
+  wipe.style.opacity = '1';
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 720);
+}
+
+function confirmMenu() {
+  // If at end block, no confirm needed — just go
+  const endBlock = document.getElementById('end-block');
+  if (endBlock && endBlock.classList.contains('on')) {
+    goToMenu();
+    return;
+  }
+  const mc = document.getElementById('menu-confirm');
+  mc.style.display = 'flex';
+}
+
+function closeMenuConfirm() {
+  document.getElementById('menu-confirm').style.display = 'none';
+}
+
+// Close menu confirm on backdrop click
+document.getElementById('menu-confirm').addEventListener('click', function(e) {
+  if (e.target === this) closeMenuConfirm();
+});
+
+// Escape closes confirm
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMenuConfirm();
+});
+
+</script>
+</body>
+</html>
