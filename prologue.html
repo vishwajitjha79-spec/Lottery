@@ -1872,7 +1872,8 @@ function checkReveal() {
     while (i < revealEls.length) {
       const el = revealEls[i];
       const rect = el.getBoundingClientRect();
-      if (rect.top < vh - 40) {
+      // Show if top of element is within viewport (including elements at very top)
+      if (rect.top < vh) {
         el.classList.add('on');
 
         // Special triggers
@@ -2506,6 +2507,24 @@ stopCrowd = function(ft) {
   stopRealCrowd();
   _origStopCrowd(ft);
 };
+
+// ── BOOT ──
+// Collect reveal elements and immediately show anything in viewport
+window.addEventListener('load', () => {
+  collectReveal();
+  // Run reveal immediately so first screen content is visible
+  checkReveal();
+  // Also run after short delay for any layout shifts
+  setTimeout(checkReveal, 200);
+  setTimeout(checkReveal, 600);
+});
+
+// Fallback — if load already fired, run now
+if (document.readyState === 'complete') {
+  collectReveal();
+  checkReveal();
+  setTimeout(checkReveal, 200);
+}
 
 </script>
 </body>
