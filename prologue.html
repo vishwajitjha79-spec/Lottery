@@ -49,6 +49,7 @@ body.theme-drive {
   pointer-events: none;
   opacity: 0;
   background: #0c0906;
+  transition: opacity 0.55s ease;
 }
 
 /* ── PAGES ── */
@@ -2020,7 +2021,8 @@ document.head.appendChild(shakeKF);
 
 // ── PAGE TRANSITIONS ──
 function showPage(id) {
-  if (transitioning || id === activePage) return;
+  if (id === activePage) return;
+  if (transitioning) return;
   transitioning = true;
 
   const wipe = document.getElementById('wipe');
@@ -2028,22 +2030,46 @@ function showPage(id) {
   const toPage   = document.getElementById('page-' + id);
   if (!toPage) { transitioning = false; return; }
 
-  // Set wipe color for destination
+  // Instant page swap — no wipe animation needed, just swap
+  if (fromPage) fromPage.classList.remove('active');
+  toPage.classList.add('active');
+
+  // Swap body theme
+  Object.values(THEMES).forEach(t => document.body.classList.remove(t));
+  document.body.classList.add(THEMES[id] || 'theme-present');
+
+  // Ambient sound management
+  const fromId = fromPage ? fromPage.id.replace('page-','') : '';
+  if (fromId === 'present') stopTypewriter();
+  if (fromId === 'flashback') { stopRealCrowd(); if(typeof _origStopCrowd==="function") _origStopCrowd(1.5); }
+  if (id === 'drive' && !rainStarted) {
+    rainStarted = true;
+    setTimeout(() => startRain(0.42), 800);
+    if (!thunderScheduled) {
+      thunderScheduled = true;
+      setTimeout(() => playThunder(), 2500);
+      setTimeout(() => playThunder(), 6200);
+    }
+  }
+
+  activePage = id;
+  window.scrollTo(0, 0);
+  collectReveal();
+  checkReveal();
+  setTimeout(checkReveal, 200);
+
+  setTimeout(() => { transitioning = false; }, 400);
+  return; // skip old wipe logic below
+
+  // OLD WIPE CODE (kept for reference, unreachable)
   wipe.style.background = WIPE_COLORS[id] || '#0c0906';
   wipe.style.transition = 'opacity 0.55s ease';
-
-  // Force layout then fade in wipe
   wipe.getBoundingClientRect();
   wipe.style.opacity = '1';
 
+  // (old page swap code - now handled above)
   setTimeout(() => {
-    // Swap pages
-    if (fromPage) fromPage.classList.remove('active');
-    toPage.classList.add('active');
-
-    // Swap body theme
-    Object.values(THEMES).forEach(t => document.body.classList.remove(t));
-    document.body.classList.add(THEMES[id] || 'theme-title');
+    // kept for structure only
 
     activePage = id;
     window.scrollTo(0, 0);
