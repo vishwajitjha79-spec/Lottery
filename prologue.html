@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TRACES · Prologue</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;600;900&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+
+body {
+  font-family: "Lora", Georgia, serif;
+  font-size: 18px;
+  line-height: 2.0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  background: #0e0b07;
+  color: #e0d4bc;
+}
+
+/* ── SCENE BACKGROUNDS ── */
+.page {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+}
+.page.active { display: block; }
+
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transition: opacity 1.2s ease;
+}
+.scene-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(8,6,3,0.72) 0%,
+    rgba(8,6,3,0.62) 40%,
+    rgba(8,6,3,0.78) 80%,
+    rgba(8,6,3,0.92) 100%);
+}
+
+/* Present — office */
+#bg-present {
+  background-image: url("assets/images/bg-office.webp");
+  background-color: #110d07;
+}
+/* Flashback — party / streets */
+#bg-flashback {
+  background-image: url("assets/images/bg-party.webp");
+  background-color: #0e0e14;
+}
+/* Drive */
+#bg-drive {
+  background-image: url("assets/images/bg-drive.webp");
+  background-color: #080608;
+}
+
+/* ── READING COLUMN ── */
+.scene {
+  position: relative;
+  z-index: 10;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 4rem 1.8rem 6rem;
+}
+@media (min-width: 700px) {
+  .scene { padding: 5rem 2.2rem 7rem; }
+}
+
+/* ── META BAR ── */
+.meta {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.6rem;
+  font-family: "Inconsolata", monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(200,160,96,0.15);
+  backdrop-filter: blur(12px);
+}
+.meta-present { background: rgba(10,7,3,0.92); color: #7a6a4a; }
+.meta-present .meta-ch { color: #c09848; }
+.meta-flashback { background: rgba(236,224,204,0.95); color: #8a7a5a; border-bottom-color: rgba(120,96,48,0.2); }
+.meta-flashback .meta-ch { color: #5a4020; }
+.meta-drive { background: rgba(6,4,3,0.95); color: #5a4a30; border-bottom-color: rgba(160,80,80,0.15); }
+.meta-drive .meta-ch { color: #c09848; }
+
+/* ── MENU BUTTON ── */
+#menu-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.2rem;
+  z-index: 300;
+}
+#menu-btn button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Inconsolata", monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: rgba(10,7,3,0.88);
+  border: 1px solid rgba(192,152,72,0.25);
+  color: #9a8a6a;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s;
+  border-radius: 2px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+#menu-btn button:hover { border-color: #c09848; color: #c09848; background: rgba(14,10,5,0.95); }
+
+/* ── PROSE ── */
+.p {
+  margin-bottom: 1.8rem;
+  color: #cec0a4;
+  font-size: 1.02rem;
+  line-height: 2.0;
+  font-weight: 400;
+}
+.p em { font-style: italic; color: #e0d4bc; }
+.p strong { font-weight: 500; color: #e8dcc8; }
+.p-center {
+  text-align: center;
+  font-style: italic;
+  color: #9a8a6a;
+  margin: 0.3rem 0 1.8rem;
+  font-size: 0.97rem;
+}
+
+/* Flashback prose — slightly different */
+#page-flashback .p { color: #2a1e0e; }
+#page-flashback .p em { color: #1a1208; }
+#page-flashback .p-center { color: #7a6040; }
+#page-flashback .scene { color: #2a1e0e; }
+
+/* ── ACADEMIC BLOCK ── */
+.academic {
+  padding: 1.2rem 1.6rem;
+  margin: 2rem 0;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.97rem;
+  line-height: 2.1;
+  border-left: 2px solid #7a6035;
+  background: rgba(192,152,72,0.05);
+  position: relative;
+  color: #9a8a6a;
+  min-height: 1.5rem;
+}
+#typing-cursor {
+  display: inline-block;
+  width: 2px; height: 0.9em;
+  background: #c09848;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── SFX ── */
+.sfx {
+  font-family: "Inconsolata", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a6035;
+  display: flex; align-items: center; gap: 0.8rem;
+  margin: 1.8rem 0 1rem;
+}
+.sfx::after { content:""; flex:1; height:1px; background: linear-gradient(90deg, rgba(192,152,72,0.3), transparent); }
+#page-flashback .sfx { color: #6a5020; }
+#page-flashback .sfx::after { background: linear-gradient(90deg, rgba(120,96,48,0.3), transparent); }
+
+.sfx-red {
+  font-family: "Inconsolata", monospace;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #8a2828;
+  display: flex; align-items: center; gap: 0.8rem;
+  margin: 1.8rem 0 1rem;
+}
+.sfx-red::after { content:""; flex:1; height:1px; background: linear-gradient(90deg, rgba(138,40,40,0.4), transparent); }
+
+/* ── DIALOGUE — per character colours ── */
+.dl {
+  margin: 1.8rem 0;
+  padding: 1rem 1.3rem;
+  border-left: 3px solid;
+  background: rgba(0,0,0,0.12);
+}
+/* Felicia — rose/amber */
+.dl-felicia { border-left-color: #c07050; background: rgba(192,112,80,0.06); }
+.dl-felicia .dl-spk { color: #c07050; }
+/* Oscar — steel blue */
+.dl-oscar { border-left-color: #5a7a9a; background: rgba(90,122,154,0.06); }
+.dl-oscar .dl-spk { color: #5a7a9a; }
+/* Jack — warm green */
+.dl-jack { border-left-color: #5a8a5a; background: rgba(90,138,90,0.06); }
+.dl-jack .dl-spk { color: #5a8a5a; }
+/* Anonymous/Man — grey */
+.dl-anon { border-left-color: #6a6a6a; background: rgba(106,106,106,0.05); }
+.dl-anon .dl-spk { color: #6a6060; }
+/* Flashback versions — darker for parchment bg */
+#page-flashback .dl { background: rgba(0,0,0,0.05); }
+#page-flashback .dl-felicia { border-left-color: #a05030; }
+#page-flashback .dl-felicia .dl-spk { color: #a05030; }
+#page-flashback .dl-oscar { border-left-color: #3a5a7a; }
+#page-flashback .dl-oscar .dl-spk { color: #3a5a7a; }
+#page-flashback .dl-jack { border-left-color: #3a6a3a; }
+#page-flashback .dl-jack .dl-spk { color: #3a6a3a; }
+#page-flashback .dl-anon { border-left-color: #4a4a4a; }
+#page-flashback .dl-anon .dl-spk { color: #4a4a4a; }
+
+.dl-spk {
+  font-family: "Inconsolata", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 0.45rem;
+}
+.dl-line {
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #e8dcc8;
+}
+#page-flashback .dl-line { color: #1a1208; }
+.dl-act {
+  font-size: 0.88rem;
+  font-weight: 300;
+  margin-top: 0.3rem;
+  line-height: 1.6;
+  color: #8a7a5a;
+}
+#page-flashback .dl-act { color: #6a5a3a; }
+
+/* ── DIVIDERS ── */
+.div {
+  display: flex; align-items: center; gap: 1.2rem; margin: 2.8rem 0;
+}
+.div::before, .div::after { content:""; flex:1; height:1px; background: linear-gradient(90deg, transparent, rgba(192,152,72,0.2), transparent); }
+.div span { font-family:"Inconsolata",monospace; font-size:0.56rem; letter-spacing:0.24em; color:#7a6035; white-space:nowrap; }
+#page-flashback .div::before, #page-flashback .div::after { background: linear-gradient(90deg, transparent, rgba(120,96,48,0.25), transparent); }
+#page-flashback .div span { color: #6a5020; }
+#page-drive .div::before, #page-drive .div::after { background: linear-gradient(90deg, transparent, rgba(160,80,80,0.15), transparent); }
+#page-drive .div span { color: #5a4030; }
+
+/* ── COMIC PANELS ── */
+.comic-panel {
+  width: 100%; margin: 1.8rem 0;
+  border: 2px solid rgba(0,0,0,0.8);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+.comic-panel img { width:100%; height:auto; display:block; }
+.comic-panel-caption {
+  font-family:"Inconsolata",monospace;
+  font-size:0.52rem; letter-spacing:0.18em; text-transform:uppercase;
+  padding: 0.45rem 0.8rem;
+  background: rgba(10,8,5,0.9); color: #6a5a3a;
+  border-top: 1px solid rgba(192,152,72,0.15);
+}
+#page-flashback .comic-panel-caption { background: rgba(220,210,190,0.9); color: #6a5020; border-top-color: rgba(120,96,48,0.2); }
+#page-drive .comic-panel-caption { background: rgba(6,4,3,0.95); color: #5a4030; border-top-color: rgba(120,60,60,0.2); }
+
+/* ── SCENE BUTTON ── */
+.scene-btn {
+  display: inline-block;
+  font-family:"Inconsolata",monospace;
+  font-size:0.65rem; letter-spacing:0.28em; text-transform:uppercase;
+  background:transparent; cursor:pointer;
+  padding:0.95rem 2rem; margin: 2.2rem 0;
+  transition: all 0.25s;
+}
+.theme-present .scene-btn, #page-present .scene-btn { border:1px solid #7a6035; color:#c09848; }
+.theme-present .scene-btn:hover, #page-present .scene-btn:hover { background:rgba(192,152,72,0.07); border-color:#c09848; }
+#page-flashback .scene-btn { border:1px solid rgba(120,96,48,0.4); color:#5a4020; }
+#page-flashback .scene-btn:hover { background:rgba(120,96,48,0.08); }
+#page-drive .scene-btn { border:1px solid #7a6035; color:#c09848; }
+
+/* ── FLASHBACK THEME ── */
+#page-flashback { background: #f0e8d4; }
+#page-flashback .meta-flashback { position: fixed; }
+
+/* ── CRASH ELEMENTS ── */
+.crash-block {
+  padding: 2rem 1.5rem; margin: 2.5rem 0;
+  border-top: 1px solid rgba(120,30,30,0.3);
+  border-bottom: 1px solid rgba(120,30,30,0.3);
+  background: rgba(60,8,8,0.08);
+}
+.rain { font-family:"Inconsolata",monospace; font-size:0.68rem; color:rgba(80,110,140,0.28); letter-spacing:0.04em; margin:0.8rem 0; user-select:none; }
+.impact { font-family:"Cinzel",serif; font-weight:900; font-size:clamp(1.9rem,6vw,3.5rem); text-align:center; line-height:1; margin:1.8rem 0; letter-spacing:0.06em; }
+.impact-w { color:#e0d4bc; }
+.impact-r { color:#b83030; }
+.crash-label { font-family:"Lora",serif; font-style:italic; font-weight:300; font-size:clamp(1.2rem,3.5vw,1.8rem); color:#7a2020; text-align:center; letter-spacing:0.05em; margin:1.5rem 0 0.5rem; }
+
+/* ── BULLSEYE ── */
+.bullseye { text-align:center; padding:1.5rem 0; }
+.bullseye-word { font-family:"Cinzel",serif; font-weight:900; font-size:clamp(1.8rem,5vw,3.2rem); letter-spacing:0.06em; color:#2a1808; }
+.bullseye-note { font-family:"Lora",serif; font-style:italic; font-size:0.93rem; margin-top:0.6rem; color:#7a6040; }
+
+/* ── RADIO WIDGET ── */
+.radio-widget {
+  margin:1.8rem 0; border:1px solid rgba(192,152,72,0.22);
+  background:rgba(8,6,3,0.88); padding:1.2rem 1.4rem;
+  font-family:"Inconsolata",monospace;
+}
+.radio-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; }
+.radio-station { font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#c09848; }
+.radio-signal { display:flex; align-items:flex-end; gap:2px; }
+.signal-bar { display:inline-block; width:4px; background:#c09848; border-radius:1px; animation:signalPulse 1.2s ease-in-out infinite; }
+@keyframes signalPulse { 0%,100%{opacity:0.3;transform:scaleY(0.7)} 50%{opacity:1;transform:scaleY(1)} }
+.signal-bar:nth-child(1){animation-delay:0s;height:6px}
+.signal-bar:nth-child(2){animation-delay:0.15s;height:10px}
+.signal-bar:nth-child(3){animation-delay:0.3s;height:14px}
+.signal-bar:nth-child(4){animation-delay:0.45s;height:10px}
+.signal-bar:nth-child(5){animation-delay:0.6s;height:6px}
+.radio-interrupt-label { font-size:0.58rem; letter-spacing:0.2em; color:#c04040; text-transform:uppercase; margin-bottom:0.4rem; animation:blink 1s step-end infinite; }
+.radio-interrupt-text { font-size:0.72rem; color:#c8a888; line-height:1.7; letter-spacing:0.05em; }
+.radio-interrupt-static { font-size:0.58rem; color:#5a4a30; letter-spacing:0.15em; margin-top:0.4rem; font-style:italic; }
+.radio-dialogue { font-family:"Lora",serif; font-style:italic; font-size:0.95rem; color:#c8b898; padding:0.6rem 0 0.8rem; line-height:1.7; }
+.radio-track-name { font-size:0.6rem; letter-spacing:0.15em; color:#7a6a4a; text-transform:uppercase; margin-bottom:0.5rem; }
+.radio-equalizer { display:flex; gap:3px; align-items:flex-end; height:20px; }
+.radio-equalizer span { display:inline-block; width:4px; background:#c09848; border-radius:1px; animation:eqBar 0.8s ease-in-out infinite; }
+.radio-equalizer span:nth-child(1){animation-duration:0.7s;animation-delay:0s}
+.radio-equalizer span:nth-child(2){animation-duration:0.9s;animation-delay:0.1s}
+.radio-equalizer span:nth-child(3){animation-duration:0.6s;animation-delay:0.2s}
+.radio-equalizer span:nth-child(4){animation-duration:1.1s;animation-delay:0.05s}
+.radio-equalizer span:nth-child(5){animation-duration:0.75s;animation-delay:0.3s}
+.radio-equalizer span:nth-child(6){animation-duration:0.85s;animation-delay:0.15s}
+.radio-equalizer span:nth-child(7){animation-duration:0.65s;animation-delay:0.25s}
+.radio-equalizer span:nth-child(8){animation-duration:0.95s;animation-delay:0s}
+.radio-equalizer span:nth-child(9){animation-duration:0.7s;animation-delay:0.2s}
+.radio-equalizer span:nth-child(10){animation-duration:0.8s;animation-delay:0.1s}
+@keyframes eqBar { 0%,100%{height:4px} 50%{height:18px} }
+
+/* ── CHOICE BLOCKS ── */
+.choice-block { margin:2.2rem 0; padding:1.3rem 1.5rem; border:1px solid rgba(192,152,72,0.22); background:rgba(192,152,72,0.04); }
+.choice-block.choice-dark { border-color:rgba(192,152,72,0.18); background:rgba(0,0,0,0.2); }
+.choice-label { font-family:"Inconsolata",monospace; font-size:0.62rem; letter-spacing:0.28em; text-transform:uppercase; color:#c09848; margin-bottom:0.9rem; }
+.choice-options { display:flex; flex-direction:column; gap:0.5rem; }
+.choice-btn { display:flex; align-items:flex-start; gap:0.8rem; background:transparent; border:1px solid rgba(192,152,72,0.18); padding:0.9rem 1rem; cursor:pointer; text-align:left; transition:all 0.25s; font-family:"Lora",Georgia,serif; }
+.choice-btn:hover { border-color:rgba(192,152,72,0.45); background:rgba(192,152,72,0.06); }
+.choice-btn.selected { border-color:#c09848; background:rgba(192,152,72,0.1); pointer-events:none; }
+.choice-btn-dark { border-color:rgba(192,152,72,0.14); }
+.choice-num { font-family:"Inconsolata",monospace; font-size:0.65rem; color:#c09848; min-width:16px; padding-top:2px; }
+.choice-text { font-size:1rem; font-style:italic; color:#e0d4bc; line-height:1.5; }
+.choice-result { margin-top:1.2rem; padding-top:1rem; border-top:1px solid rgba(192,152,72,0.12); }
+@keyframes fadeInResult { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.choice-result { animation:fadeInResult 0.6s ease both; }
+
+/* ── END BLOCK ── */
+.end-block { text-align:center; padding:3.5rem 1rem 2.5rem; border-top:1px solid rgba(192,152,72,0.12); margin-top:2.5rem; }
+.end-label { font-family:"Inconsolata",monospace; font-size:0.56rem; letter-spacing:0.36em; text-transform:uppercase; color:#7a6035; margin-bottom:1.8rem; }
+.end-quote { font-family:"Lora",serif; font-style:italic; font-size:1.1rem; color:#8a7a5a; font-weight:300; line-height:1.9; margin-bottom:2.2rem; }
+.end-meta { font-family:"Inconsolata",monospace; font-size:0.52rem; color:#6a5a40; letter-spacing:0.14em; line-height:2.2; text-transform:uppercase; opacity:0.55; margin-bottom:2rem; }
+.save-prompt { margin-top:1.5rem; padding:1.3rem 1.5rem; border:1px solid rgba(192,152,72,0.18); background:rgba(192,152,72,0.04); }
+.save-prompt-label { font-family:"Cinzel",serif; font-size:0.9rem; font-weight:600; color:#e0d4bc; letter-spacing:0.04em; margin-bottom:0.4rem; }
+.save-prompt-sub { font-family:"Lora",serif; font-style:italic; font-size:0.85rem; color:#9a8a6a; font-weight:300; margin-bottom:1.1rem; line-height:1.6; }
+.save-prompt-btns { display:flex; flex-direction:column; gap:0.5rem; }
+.save-btn { font-family:"Inconsolata",monospace; font-size:0.6rem; letter-spacing:0.22em; text-transform:uppercase; padding:0.85rem 1.2rem; background:transparent; cursor:pointer; transition:all 0.25s; text-align:left; }
+.save-btn-yes { border:1px solid rgba(192,152,72,0.35); color:#c09848; }
+.save-btn-yes:hover { background:rgba(192,152,72,0.08); border-color:#c09848; }
+.save-btn-no { border:1px solid rgba(255,255,255,0.08); color:#7a6a4a; }
+.save-btn-no:hover { border-color:rgba(255,255,255,0.16); color:#9a8a6a; }
+.save-done { margin-top:1.5rem; padding:1.3rem 1.5rem; border:1px solid rgba(192,152,72,0.18); background:rgba(192,152,72,0.04); text-align:center; }
+.save-done-icon { font-size:1.4rem; color:#c09848; margin-bottom:0.4rem; }
+.save-done-text { font-family:"Inconsolata",monospace; font-size:0.58rem; letter-spacing:0.28em; text-transform:uppercase; color:#9a8a6a; margin-bottom:1rem; }
+
+/* scrollbar */
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#7a6035; border-radius:2px; }
+
+@keyframes shake {
+  0%,100%{transform:none}
+  15%{transform:translate(-4px,2px)}
+  30%{transform:translate(3px,-3px)}
+  45%{transform:translate(-2px,4px)}
+  60%{transform:translate(4px,-1px)}
+  75%{transform:translate(-3px,2px)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Audio -->
+<audio id="aud-rain" src="assets/audio/audio-rain.mp3" loop preload="none"></audio>
+<audio id="aud-thunder" src="assets/audio/audio-thunder.mp3" preload="none"></audio>
+<audio id="aud-crowd" src="assets/audio/audio-crowd.mp3" loop preload="none"></audio>
+<audio id="aud-radio" src="assets/audio/audio-radio.mp3" preload="none"></audio>
+<audio id="aud-crash" src="assets/audio/audio-crash.mp3" preload="none"></audio>
+
+<!-- Menu confirm -->
+<div id="menu-confirm" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(6,4,2,0.9);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:2rem;">
+  <div style="border:1px solid rgba(192,152,72,0.2);background:rgba(10,7,4,0.98);padding:2rem;max-width:320px;width:100%;">
+    <div style="font-family:Cinzel,serif;font-size:1rem;color:#e0d4bc;margin-bottom:0.8rem;">Return to Menu?</div>
+    <div style="font-family:Lora,serif;font-style:italic;font-size:0.9rem;color:#9a8a6a;line-height:1.7;margin-bottom:1.5rem;font-weight:300;">Your progress at this point won't be saved.</div>
+    <div style="display:flex;gap:0.6rem;">
+      <button onclick="closeMenuConfirm()" style="flex:1;font-family:Inconsolata,monospace;font-size:0.57rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.75rem;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#9a8a6a;cursor:pointer;">Stay</button>
+      <button onclick="goToMenu()" style="flex:1;font-family:Inconsolata,monospace;font-size:0.57rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.75rem;background:transparent;border:1px solid rgba(192,152,72,0.3);color:#c09848;cursor:pointer;">Go to Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Menu button -->
+<div id="menu-btn">
+  <button onclick="confirmMenu()">
+    <span style="font-size:0.9rem;line-height:1;">&#9776;</span>
+    <span>Menu</span>
+  </button>
+</div>
+
+<!-- ══════════════ PAGE: PRESENT ══════════════ -->
+<div class="page active" id="page-present">
+  <div class="scene-bg" id="bg-present"></div>
+  <div class="meta meta-present">
+    <span class="meta-loc">Harwick University &nbsp;·&nbsp; Edinburgh</span>
+    <span class="meta-ch">The Office &nbsp;·&nbsp; 18:47</span>
+    <span class="meta-date">14 Nov 2031</span>
+  </div>
+  <div class="scene" style="padding-top:5rem;">
+
+    <p class="p">The third-floor office of the Harwick University physics building has not changed in four hours. Same desk. Same lamp, amber, narrow. Same three monitors, two of them dark. Same cold coffee going colder in a mug that says WORLD'S WORST BOSS, a gift from a student that Oscar has kept because he finds it genuinely funny every single morning.</p>
+
+    <p class="p">DR. OSCAR ADKINS. 28. American. Chicago-born, Edinburgh-tenured since twenty-six. One hand pressed flat to his temple. The other moving a pen across a yellow legal pad in the unhurried automatic way of someone who is not writing but thinking.</p>
+
+    <p class="p">His wedding ring, a thin plain band of gold, catches the light every time he writes. He doesn't notice. He hasn't noticed in four years.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-oscar-desk.webp" alt="Oscar at his desk">
+      <div class="comic-panel-caption">Harwick University &nbsp;·&nbsp; Department of Theoretical Astrophysics &nbsp;·&nbsp; 18:47</div>
+    </div>
+
+    <div class="academic"><span id="academic-text"></span><span id="typing-cursor" style="display:none;"></span></div>
+
+    <div class="sfx" id="sfx-door">[ SFX &nbsp;·&nbsp; Old door hinge. One long, slow creak. ]</div>
+
+    <p class="p">He doesn't look up. A pause. Precisely long enough to make a point. Then her phone, extended into the room.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-bump.webp" alt="Baby bump">
+      <div class="comic-panel-caption">Photo received &nbsp;·&nbsp; 18:48 &nbsp;·&nbsp; No caption. None needed.</div>
+    </div>
+
+    <p class="p" style="font-style:italic;font-size:0.95rem;color:#9a8a6a;">One hand on the curve. Unpainted nails. A thin white scar along the index finger. No caption. None needed.</p>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia &nbsp;·&nbsp; from the doorway</div>
+      <div class="dl-line">"Oscar."</div>
+      <div class="dl-act">Not a question. Not a complaint. Just his name, placed in the air like a pin in a map. Here. This is where you are supposed to be looking.</div>
+    </div>
+
+    <p class="p">He looks up. Finally. And produces, automatically, privately, the smile he keeps for no one else on earth.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-felicia-face.webp" alt="Felicia — the eyebrow">
+      <div class="comic-panel-caption">Second photo &nbsp;·&nbsp; 18:48 &nbsp;·&nbsp; The look that ends arguments before they begin.</div>
+    </div>
+
+    <p class="p">FELICIA ADKINS. 28. Barefoot. Holding a mug of decaf. Eight months pregnant and carrying herself with the kind of quiet authority that has nothing to do with how loud you speak. Until eight months ago she worked for British intelligence, a unit so classified it has no public name and does not put its people's names anywhere a computer can find them. She is also one month older than Oscar. She has mentioned this forty-seven times.</p>
+
+    <p class="p">She crosses the room. Sits in his lap without asking, as though the chair was always built for two. One hand on her bump. The other on his cheek.</p>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Your theory will still be wrong tomorrow. I, however, have a dinner reservation. And someone in here doing gymnastics against my ribcage who would like to sit somewhere warm and eat bread."</div>
+    </div>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Eyes already drifting back to the notepad.</div>
+      <div class="dl-line">"Ten minutes."</div>
+    </div>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"You have been saying ten minutes for two hours."</div>
+    </div>
+
+    <p class="p">She reaches over. Closes the notepad. Closes the laptop. Looks at him straight on, the way she looks at things she has already decided about.</p>
+
+    <p class="p">He sighs. She kisses him, soft and unhurried, the kind of kiss that is also a verdict. Then she stands, smooths her dress, and walks to the door with the measured calm of someone who has spent years walking into rooms that might be dangerous and always walking back out on her own terms.</p>
+
+    <p class="p">She does not look back.</p>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Get ready. I'm waiting."</div>
+    </div>
+
+    <p class="p">Her footsteps in the corridor. Gone.</p>
+    <p class="p">He sits in the quiet she has left behind. Looks at the closed notepad. Looks at the ceiling. Lets out a long breath that has, in roughly equal measure: love, defeat, and something close to gratitude.</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Getting up. Moving toward the bathroom. Almost smiling.</div>
+      <div class="dl-line">"Okay, love."</div>
+    </div>
+
+    <p class="p">The lamp stays on. The notepad stays closed. Outside the tall window, Edinburgh in November has started building clouds, heavy and grey, rolling in from the water with no hurry. The kind that don't threaten. They just arrive, and stay, and make the city feel smaller.</p>
+
+    <div class="div"><span>· · ·</span></div>
+
+    <p class="p">She is ready before him. This is how it always goes.</p>
+
+    <div class="sfx">[ SFX &nbsp;·&nbsp; Shower off. Bathroom door. Footsteps. ]</div>
+
+    <p class="p">He comes out in his blazer, collar slightly off. She crosses to him without being asked. Fixes the collar with both hands. Slow and deliberate.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-felicia-dress.webp" alt="Felicia in the burgundy dress">
+      <div class="comic-panel-caption">Felicia Adkins &nbsp;·&nbsp; Anniversary &nbsp;·&nbsp; 14 November 2031</div>
+    </div>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"You look nice. Cleaned up."</div>
+    </div>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Looking at her the way he always does, like she is something he has not quite finished working out.</div>
+      <div class="dl-line">"You're beautiful."</div>
+    </div>
+
+    <p class="p">She laughs, rare and real and completely unguarded, and folds herself against his chest. As hard as she was with the rest of the world, she was exactly that soft with him. She let herself be held for eleven seconds. He knew better than to count out loud.</p>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"We should go."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Yeah. Sure."</div>
+    </div>
+
+    <div class="div"><span>· · ·</span></div>
+
+    <p class="p">Before the car, before the rain, before everything that comes next — she stands at the bathroom mirror for one last moment. The dress. The bump. The small scar on her index finger. The earring that has always been just hers.</p>
+
+    <p class="p">And somewhere in that quiet, her mind does what minds do when the present gets too full to hold.</p>
+
+    <p class="p">It goes back.</p>
+
+    <div style="text-align:center;padding:2rem 0 1rem;">
+      <button class="scene-btn" onclick="goToPage('flashback')">Follow Felicia &nbsp;·&nbsp; Eight Years Earlier</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: FLASHBACK ══════════════ -->
+<div class="page" id="page-flashback">
+  <div class="meta meta-flashback">
+    <button onclick="goToPage('present')" style="font-family:Inconsolata,monospace;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;color:#8a7a5a;padding:0;">&#8592; Back</button>
+    <span class="meta-ch">Memory &nbsp;·&nbsp; Eight Years Earlier</span>
+    <span style="color:#aaa090;font-size:0.54rem;letter-spacing:0.18em;">October 2023</span>
+  </div>
+  <div class="scene" style="padding-top:5rem;">
+
+    <div class="comic-panel">
+      <img src="assets/images/img-party.webp" alt="The Grassmarket party">
+      <div class="comic-panel-caption">Edinburgh &nbsp;·&nbsp; Grassmarket &nbsp;·&nbsp; October 2023</div>
+    </div>
+
+    <p class="p">She hears it before she sees it. The flat near Grassmarket is loud the way only student parties manage — music and conversation and laughter all on top of each other. She has been leaning against the wall near the window for the better part of an hour, holding a drink she has barely touched, watching the room the way she has always watched rooms.</p>
+
+    <p class="p-center">Exits. Crowd. Anything that does not fit.</p>
+
+    <p class="p">She finds it near the far wall. Two men — broad, confident, the particular kind of drunk that takes up space on purpose — have moved close to two others. Close enough to mean something. Not close enough to be undeniable. Not yet.</p>
+
+    <p class="p">The first of the two being crowded is tall. American. He is standing very still in a way that is either fear or its precise opposite. She works out in seconds it is not fear. Beside him, shorter, British-Nigerian, jaw already set, is his friend. The friend has been ready since they walked in.</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Jack. Leave it."</div>
+    </div>
+    <div class="dl dl-jack">
+      <div class="dl-spk">Jack</div>
+      <div class="dl-line">"They've been at it since we came through the door."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"I know. So we leave it."</div>
+    </div>
+
+    <p class="p">One of the two men steps slightly closer. Smiling.</p>
+
+    <div class="dl dl-anon">
+      <div class="dl-spk">Man</div>
+      <div class="dl-line">"How about a game of darts. Keep it friendly."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Not interested."</div>
+    </div>
+    <div class="dl dl-anon">
+      <div class="dl-spk">Man</div>
+      <div class="dl-line">"Scared?"</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Not interested."</div>
+    </div>
+    <div class="dl dl-anon">
+      <div class="dl-spk">Man</div>
+      <div class="dl-act">Already knowing how this would go.</div>
+      <div class="dl-line">"Your friend looks interested though."</div>
+    </div>
+
+    <p class="p">Jack is already looking at the board.</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Jack. Don't. They've been practising on that board all night. This is exactly what they wanted. We play, we lose, they've had their fun."</div>
+    </div>
+    <div class="dl dl-jack">
+      <div class="dl-spk">Jack</div>
+      <div class="dl-line">"Or we play and we don't lose."</div>
+    </div>
+
+    <p class="p">A silence between them, the kind that carries a whole argument in four seconds.</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Five years, Jack. You're a problem."</div>
+    </div>
+    <div class="dl dl-jack">
+      <div class="dl-spk">Jack</div>
+      <div class="dl-line">"You in?"</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">A pause. Shorter this time.</div>
+      <div class="dl-line">"I'm in."</div>
+    </div>
+
+    <div class="div"><span>· The Game ·</span></div>
+
+    <p class="p">The crowd drifts over without deciding to. The two men throw first — solid scores, comfortable on a board they know well. The watching crowd makes the noise of people who think they have already seen the best of the evening.</p>
+
+    <p class="p">Jack steps up. First dart catches the inner ring. Good. Second dart misses, clean and undeniable. Third does better but not enough. Jack steps back with the look of a man having a private argument with physics.</p>
+
+    <p class="p">Oscar picks up his darts. Steps to the line and stops. Just stands there. Does not shift his weight, does not roll his wrist, does not do any of the small rituals people use to tell themselves they are ready. He is simply still.</p>
+
+    <div class="sfx">[ the room gets quieter than a party room has any right to be ]</div>
+
+    <p class="p">He throws his first dart.</p>
+    <p class="p-center">Inner ring. Clean.</p>
+    <p class="p">He picks up the second. Same pace, same stillness. Throws.</p>
+    <p class="p-center">Inner ring. Again.</p>
+
+    <p class="p">The crowd makes a sound — not cheering, more like the involuntary exhale of a room watching something settle into exactly the shape it was always going to take. Oscar picks up the third dart.</p>
+
+    <div class="sfx">[ completely quiet now ]</div>
+    <p class="p">He throws.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-dart-bullseye.webp" alt="Bullseye">
+      <div class="comic-panel-caption">Bullseye &nbsp;·&nbsp; Third dart &nbsp;·&nbsp; Dead centre</div>
+    </div>
+
+    <div class="bullseye">
+      <div class="bullseye-word">BULLSEYE.</div>
+      <div class="bullseye-note">Dead centre. The board makes a different sound when something lands exactly where it was always going to.</div>
+    </div>
+
+    <p class="p">The two men look at the board for a long time. Then at each other. Then find somewhere else to be.</p>
+
+    <div class="dl dl-jack">
+      <div class="dl-spk">Jack</div>
+      <div class="dl-line">"What was that."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Darts."</div>
+    </div>
+    <div class="dl dl-jack">
+      <div class="dl-spk">Jack</div>
+      <div class="dl-line">"Five years. Five years I have known you."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"You never asked."</div>
+    </div>
+
+    <div class="div"><span>· · ·</span></div>
+
+    <p class="p">She finishes her drink. Sets the glass down. Crosses the room at her own pace, not rushing, because she has already decided where she is going. He notices her coming. Does not change his posture or expression. Just waits.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-first-meeting.webp" alt="First meeting">
+      <div class="comic-panel-caption">The night it became something</div>
+    </div>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"That was either very brave or very stupid."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Jack's decision was brave. My agreeing was probably stupid. The throwing was fine."</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"You're very calm for someone who almost had his face rearranged twenty minutes ago."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Fighting is loud. I prefer precision."</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Is that a general rule or just for tonight?"</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Both, I think."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"You've been against that wall all night."</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"So were you."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Different reasons, probably."</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"Probably."</div>
+    </div>
+
+    <p class="p">A pause that does not need filling.</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Extending his hand.</div>
+      <div class="dl-line">"Oscar."</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-act">Taking it.</div>
+      <div class="dl-line">"Felicia."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Are you enjoying the party, Felicia?"</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-act">Looking around once. A proper assessment. Looking back.</div>
+      <div class="dl-line">"I am now."</div>
+    </div>
+
+    <p class="p">He smiles. Small, private, the one nobody else gets. He does not know yet that she will be the only person who ever receives it. Neither does she.</p>
+    <p class="p-center">But the universe, apparently, already had plans for them.</p>
+
+    <div class="div"><span>· The Months That Followed ·</span></div>
+
+    <p class="p">They did not swap numbers that night. They did not need to. The same library three days later. The same coffee queue twice in one week. A bookshop on Victoria Street on a rainy Thursday, where he was reading the exact book she had returned the week before — they both noticed at the same moment, neither spoke for a second, then both spoke at once, and laughed.</p>
+    <p class="p-center">That was the moment. That was when it became something.</p>
+
+    <p class="p">Three months in, one night, they slept together for the first time. Unhurried. Certain. The way things happen when two people have been circling something long enough that finally going there feels less like a decision and more like an arrival. It was the best night of her life. She did not say this for another six months, and then only once, quietly, in the dark.</p>
+
+    <div class="div"><span>· 2025 &nbsp;·&nbsp; The Divergence ·</span></div>
+
+    <p class="p">He enrolled in his PhD. Theoretical Astrophysics. Harwick University. She had other plans.</p>
+    <p class="p">Felicia joined VEIL-9. British intelligence, a division so classified it has no public name and does not put its people in any database a civilian could find. She trained for eleven months. Passed at twenty-two. Youngest in her intake. She became very good at her job — controlled under pressure, precise when being imprecise could mean not coming home.</p>
+    <p class="p">And every time she came home, he was there. Reading. Making dinner. Not asking about the parts she could not share. Keeping the shape of their life steady while she moved through harder rooms.</p>
+    <p class="p-center">She never asked him to do that. He never explained why he did.</p>
+
+    <div class="div"><span>· 2027 &nbsp;·&nbsp; The Wedding ·</span></div>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-wedding.webp" alt="The wedding">
+      <div class="comic-panel-caption">June 2027 &nbsp;·&nbsp; Georgian Hall &nbsp;·&nbsp; Edinburgh New Town</div>
+    </div>
+
+    <p class="p">June. Both twenty-four. A restored Georgian hall in Edinburgh's New Town — tall windows, stone floors, everyone who mattered filling it. His family flew in from Chicago. His mother arrived in a dress the colour of deep amber. Her mother had been crying since somewhere around Newcastle and was still going when the ceremony started. Her father shook Oscar's hand for a long time, said very little, and meant a great deal.</p>
+    <p class="p">Jack was best man. His speech was funny in the first half and sharper than anyone expected in the second. Near midnight they found a corner near one of the tall windows and stood there together without talking, looking out at Edinburgh in June.</p>
+    <p class="p-center">That quiet moment was probably the best one of the whole night.</p>
+    <p class="p">The photo on their mantelpiece shows them both mid-laugh at something the photographer said. Neither of them remember what it was. She is one month older. She has mentioned it forty-seven times.</p>
+
+    <div class="div"><span>· March 2031 &nbsp;·&nbsp; Eight Months Ago ·</span></div>
+
+    <p class="p">A Tuesday. She found out and sat on the bathroom floor for twenty-two minutes, running through it the way she ran through operational decisions. Variables. What changes. How a life reorganises itself around something new at the centre of it. She came to no conclusion. So she went and told him.</p>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-pregnancy.jpeg" alt="The pregnancy reveal">
+      <div class="comic-panel-caption">March 2031 &nbsp;·&nbsp; A Tuesday morning</div>
+    </div>
+
+    <p class="p">He put his coffee down. Looked at her properly. Then stood, put both hands on her face, and said</p>
+
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-act">Not to the bump. To her.</div>
+      <div class="dl-line">"Hello."</div>
+    </div>
+
+    <p class="p">She did one more month of active work, then resigned. Filed the commendation without reading it. Walked out of the building on a grey Tuesday morning and took the bus home.</p>
+    <p class="p-center">She has not thought about VEIL-9 since. Or so she tells herself.</p>
+
+    <div style="text-align:center;padding:2rem 0 1rem;">
+      <button class="scene-btn" onclick="goToPage('drive')">Back to the Present &nbsp;·&nbsp; November 2031</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ PAGE: DRIVE ══════════════ -->
+<div class="page" id="page-drive">
+  <div class="scene-bg" id="bg-drive"></div>
+  <div class="meta meta-drive">
+    <button onclick="goToPage('flashback')" style="font-family:Inconsolata,monospace;font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;color:#5a4a30;padding:0;">&#8592; Back</button>
+    <span class="meta-ch">The Drive &nbsp;·&nbsp; 19:14</span>
+    <span style="color:#4a3a20;font-size:0.54rem;letter-spacing:0.18em;">14 Nov 2031</span>
+  </div>
+  <div class="scene" style="padding-top:5rem;">
+
+    <p class="p">His car. He drives. She navigates. The city slides past — Old Town spires, wet cobblestones catching headlights, then the quieter southside roads, then Edinburgh starting to thin at its own edges.</p>
+
+    <!-- Radio scene -->
+    <p class="p">She has her feet up on the dashboard. A habit he has given up fighting. He drums once on the steering wheel at a red light. The radio plays something neither of them chose. She watches the rain on the window and thinks about nothing at all.</p>
+    <p class="p">This is the last completely ordinary moment. Neither of them know that yet.</p>
+
+    <!-- Radio widget -->
+    <div class="radio-widget" id="radio-widget">
+      <div id="radio-phase-warning">
+        <div class="radio-header">
+          <div class="radio-station">BBC Radio Scotland &nbsp;·&nbsp; 92.4 FM</div>
+          <div class="radio-signal">
+            <span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span>
+          </div>
+        </div>
+        <div class="radio-interrupt">
+          <div class="radio-interrupt-label">&#9888; Severe Weather Warning</div>
+          <div class="radio-interrupt-text" id="radio-warning-text"></div>
+          <div class="radio-interrupt-static" id="radio-static" style="display:none;">&#8212; &#8212; &#8212; static &#8212; &#8212; &#8212;</div>
+        </div>
+      </div>
+      <div id="radio-phase-music" style="display:none;">
+        <div class="radio-header">
+          <div class="radio-station" id="radio-station-name">BBC Radio Scotland &nbsp;·&nbsp; 92.4 FM</div>
+          <div class="radio-signal"><span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span><span class="signal-bar"></span></div>
+        </div>
+        <div class="radio-dialogue" id="radio-felicia-line"></div>
+        <div id="radio-track" style="display:none;">
+          <div class="radio-track-name" id="radio-song-name"></div>
+          <div class="radio-equalizer" id="radio-eq">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sfx">[ SFX &nbsp;·&nbsp; Rain. Heavy. Wipers at full. Traffic building. ]</div>
+
+    <div class="comic-panel">
+      <img src="assets/images/img-road-pov.webp" alt="Route 9 from inside the car">
+      <div class="comic-panel-caption">Route 9 &nbsp;·&nbsp; Edinburgh Southside &nbsp;·&nbsp; 21:03</div>
+    </div>
+
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-act">Watching the map. Watching the clock.</div>
+      <div class="dl-line">"We're ten minutes behind. The reservation holds until half seven."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Traffic's"</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-act">Pulling the route up herself. It goes south, through a stretch where the streetlights thin and hedgerows close in.</div>
+      <div class="dl-line">"I know. There's a shortcut. Both main routes are blocked. Here, turn on Maps."</div>
+    </div>
+    <div class="dl dl-oscar">
+      <div class="dl-spk">Oscar</div>
+      <div class="dl-line">"Is it a dirt road?"</div>
+    </div>
+    <div class="dl dl-felicia">
+      <div class="dl-spk">Felicia</div>
+      <div class="dl-line">"It's a road. Trust me."</div>
+    </div>
+
+    <!-- CHOICE 1 -->
+    <div class="choice-block" id="choice-oscar">
+      <div class="choice-label">Oscar</div>
+      <div class="choice-options">
+        <button class="choice-btn" onclick="oscarChoice(1)"><span class="choice-num">1</span><span class="choice-text">"I always trust you."</span></button>
+        <button class="choice-btn" onclick="oscarChoice(2)"><span class="choice-num">2</span><span class="choice-text">"You sure it's not a dirt road?"</span></button>
+        <button class="choice-btn" onclick="oscarChoice(3)"><span class="choice-num">3</span><span class="choice-text">"Lead the way."</span></button>
+      </div>
+    </div>
+    <div id="oscar-choice-result"></div>
+
+    <div class="crash-block">
+      <div class="rain">/ / / / / / / / / / / / / / / / / / / / / / / / / / /</div>
+      <p class="p" style="color:#b8a898;">The road narrows. The city drops away completely. Only dark hedgerow on both sides, the sound of water hammering the roof, headlights finding twenty feet of road and nothing beyond. The map gives directions calmly. The rain is past inconvenience, into something that feels deliberate.</p>
+      <p class="p" style="color:#b8a898;">The road bends left. The Volvo does forty. He watches the white line. She watches the map. The reservation will be gone if they do not</p>
+      <div class="rain">/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /</div>
+
+      <div class="sfx-red">[ SFX &nbsp;·&nbsp; Headlights. Oncoming. Wrong side. No warning. ]</div>
+
+      <p class="p" style="line-height:2.3;color:#c8b4a0;">
+        <strong style="color:#e0d4bc;">A figure.</strong><br>
+        Standing in the road.<br>
+        Not a car. Not an animal. A person.<br>
+        Completely still. In the dark. In the rain.<br>
+        Not caught off guard. Not frozen.<br>
+        <em>Waiting.</em>
+      </p>
+
+      <div class="comic-panel">
+        <img src="assets/images/img-figure.webp" alt="The figure in the road">
+      </div>
+
+      <!-- CHOICE 2 -->
+      <div class="choice-block choice-dark" id="choice-swerve">
+        <div class="choice-label" style="color:#c09848;">Which way does he turn?</div>
+        <div class="choice-options">
+          <button class="choice-btn choice-btn-dark" onclick="swerveChoice('left')"><span class="choice-num">&#8592;</span><span class="choice-text">Hard left</span></button>
+          <button class="choice-btn choice-btn-dark" onclick="swerveChoice('right')"><span class="choice-num">&#8594;</span><span class="choice-text">Hard right</span></button>
+        </div>
+      </div>
+      <div id="swerve-result"></div>
+
+      <div class="impact impact-r" id="el-roll">ROLL.</div>
+
+      <div class="comic-panel">
+        <img src="assets/images/img-crash.webp" alt="The crash">
+      </div>
+
+      <div class="sfx-red">[ SFX &nbsp;·&nbsp; Metal folding. Glass. The world on its side. Then nothing. ]</div>
+
+      <p class="p" style="color:#9a9088;">The shape of the car becomes something unrecognisable. Glass moves in slow motion. Gravity picks a new direction. The map continues, calm and precise, giving directions to a place they will not reach tonight.</p>
+
+      <p class="p" style="color:#9a9088;">She is conscious for</p>
+      <p class="p" style="color:#888078;">seconds. Long enough to turn her head.</p>
+      <p class="p" style="color:#787068;">Long enough to see him.</p>
+
+      <div class="comic-panel">
+        <img src="assets/images/img-oscar-limp.webp" alt="Oscar in the wreckage">
+      </div>
+
+      <p class="p" style="color:#686058;font-style:italic;">A shape. Against the steering column.</p>
+      <p class="p" style="color:#585048;font-style:italic;text-align:center;letter-spacing:0.1em;">Still.</p>
+      <p class="p" style="color:#484038;font-style:italic;text-align:center;letter-spacing:0.1em;">Limp.</p>
+
+      <div class="crash-label" id="el-oscar">Oscar</div>
+      <p class="p" style="text-align:center;color:#5a5040;font-style:italic;font-size:0.93rem;margin-top:1.2rem;">Then nothing at all.</p>
+    </div>
+
+    <div class="end-block">
+      <div class="end-label">End of Prologue</div>
+      <div class="end-quote">
+        "She will not remember the figure in the road<br>
+        for another three weeks.<br>
+        And then she will not be able to stop."
+      </div>
+      <div class="end-meta">
+        VEIL-9 &nbsp;·&nbsp; Episode I &nbsp;·&nbsp; When Stars Collide<br>
+        Edinburgh, Scotland &nbsp;·&nbsp; November 2031<br>
+        Felicia Adkins &nbsp;·&nbsp; Oscar Adkins<br>
+        <span style="color:#6a1818;opacity:1;">Chapter One &nbsp;·&nbsp; Incoming</span>
+      </div>
+      <div class="save-prompt" id="save-prompt">
+        <div class="save-prompt-label">Save your progress?</div>
+        <div class="save-prompt-sub">Your prologue completion will be recorded and Chapter 1 will be unlocked.</div>
+        <div class="save-prompt-btns">
+          <button class="save-btn save-btn-yes" onclick="savePrologue()">Save &amp; Return to Menu</button>
+          <button class="save-btn save-btn-no" onclick="goToMenu()">Return Without Saving</button>
+        </div>
+      </div>
+      <div id="save-done" style="display:none;" class="save-done">
+        <div class="save-done-icon">&#10003;</div>
+        <div class="save-done-text">Progress Saved &nbsp;·&nbsp; Chapter 1 Unlocked</div>
+        <button class="save-btn save-btn-yes" onclick="goToMenu()">Return to Menu</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// TRACES · PROLOGUE ENGINE
+// ══════════════════════════════════
+
+// ── PAGE SYSTEM ──
+var activePage = 'present';
+var transitioning = false;
+
+function goToPage(id) {
+  if (id === activePage) return;
+  if (transitioning) return;
+  transitioning = true;
+
+  var from = document.getElementById('page-' + activePage);
+  var to = document.getElementById('page-' + id);
+  if (!to) { transitioning = false; return; }
+
+  if (from) from.classList.remove('active');
+  to.classList.add('active');
+
+  // Theme
+  document.body.className = '';
+  if (id === 'flashback') document.body.className = 'fb-active';
+  if (id === 'drive') document.body.className = 'drive-active';
+
+  // Sound transitions
+  if (activePage === 'present') stopTypewriter();
+  if (activePage === 'flashback') stopCrowd();
+  if (id === 'drive' && !rainStarted) {
+    rainStarted = true;
+    setTimeout(startRain, 600);
+    if (!thunderScheduled) {
+      thunderScheduled = true;
+      setTimeout(function(){ playThunder(); }, 2500);
+      setTimeout(function(){ playThunder(); }, 6500);
+    }
+  }
+
+  activePage = id;
+  window.scrollTo(0, 0);
+  setTimeout(function(){ transitioning = false; }, 400);
+}
+
+// ── MENU ──
+function confirmMenu() {
+  document.getElementById('menu-confirm').style.display = 'flex';
+}
+function closeMenuConfirm() {
+  document.getElementById('menu-confirm').style.display = 'none';
+}
+function goToMenu() {
+  stopRain();
+  stopCrowd();
+  window.location.href = 'index.html';
+}
+document.getElementById('menu-confirm').addEventListener('click', function(e) {
+  if (e.target === this) closeMenuConfirm();
+});
+
+// ── AUDIO CONTEXT ──
+var actx = null;
+var audioUnlocked = false;
+var rainPlaying = false;
+var crowdPlaying = false;
+var rainStarted = false;
+var thunderScheduled = false;
+var radioInterruptShown = false;
+
+function getAudio() {
+  if (!actx) {
+    try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  return actx;
+}
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  var a = getAudio();
+  if (!a) return;
+  if (a.state === 'suspended') {
+    a.resume().then(function(){ audioUnlocked = true; });
+  } else {
+    audioUnlocked = true;
+  }
+}
+window.addEventListener('scroll', unlockAudio, {once: true, passive: true});
+window.addEventListener('touchstart', unlockAudio, {once: true, passive: true});
+window.addEventListener('click', unlockAudio, {once: true});
+
+// ── SYNTH SOUNDS ──
+function playClick() {
+  var a = getAudio(); if (!a) return;
+  try {
+    var sr = a.sampleRate;
+    var b = a.createBuffer(1, Math.floor(sr * 0.012), sr);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < d.length; i++) d[i] = (Math.random()*2-1)*(1-i/d.length)*0.15;
+    var s = a.createBufferSource(); s.buffer = b;
+    var g = a.createGain(); g.gain.value = 0.3;
+    s.connect(g); g.connect(a.destination); s.start();
+  } catch(e) {}
+}
+
+function playCreak() {
+  var a = getAudio(); if (!a) return;
+  try {
+    var dur = 2.0, sr = a.sampleRate;
+    var b = a.createBuffer(1, Math.floor(sr*dur), sr);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < d.length; i++) {
+      var t = i/sr;
+      var env = Math.pow(Math.sin(Math.PI*t/dur), 0.4) * 0.7;
+      var freq = 140 + Math.sin(t*1.2)*30;
+      d[i] = (Math.sin(t*freq*2*Math.PI + Math.sin(t*28)*1.2)*0.35 +
+               Math.sin(t*freq*3*Math.PI)*0.12 +
+               (Math.random()*2-1)*0.04) * env;
+    }
+    var s = a.createBufferSource(); s.buffer = b;
+    var f = a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=320; f.Q.value=1.5;
+    var g = a.createGain(); g.gain.value = 0.2;
+    s.connect(f); f.connect(g); g.connect(a.destination); s.start();
+  } catch(e) {}
+}
+
+function playDart() {
+  var a = getAudio(); if (!a) return;
+  try {
+    var dur = 0.18, sr = a.sampleRate;
+    var b = a.createBuffer(1, Math.floor(sr*dur), sr);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < d.length; i++) {
+      var t = i/sr;
+      d[i] = ((Math.random()*2-1)*0.6 + Math.sin(t*1800*2*Math.PI)*0.4) * Math.exp(-t*28);
+    }
+    var s = a.createBufferSource(); s.buffer = b;
+    var hp = a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=900;
+    var g = a.createGain(); g.gain.value = 0.45;
+    s.connect(hp); hp.connect(g); g.connect(a.destination); s.start();
+  } catch(e) {}
+}
+
+function playGiggle() {
+  var a = getAudio(); if (!a) return;
+  var bursts = [0, 0.12, 0.22, 0.30, 0.36];
+  bursts.forEach(function(start, idx) {
+    try {
+      var dur = 0.09 + idx*0.01;
+      var pitch = 520 + idx*40 + Math.random()*60;
+      var sr = a.sampleRate;
+      var b = a.createBuffer(1, Math.floor(sr*dur), sr);
+      var d = b.getChannelData(0);
+      for (var i = 0; i < d.length; i++) {
+        var t = i/sr;
+        var env = Math.sin(Math.PI*t/dur);
+        d[i] = (Math.sin(t*pitch*2*Math.PI)*0.35 + (Math.random()*2-1)*0.08) * env * 0.4;
+      }
+      var s = a.createBufferSource(); s.buffer = b;
+      var lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3200;
+      var g = a.createGain(); g.gain.value=0.5;
+      s.connect(lp); lp.connect(g); g.connect(a.destination);
+      s.start(a.currentTime + start);
+    } catch(e) {}
+  });
+}
+
+function playScreech() {
+  var a = getAudio(); if (!a) return;
+  try {
+    var dur = 1.1, sr = a.sampleRate;
+    var b = a.createBuffer(1, Math.floor(sr*dur), sr);
+    var d = b.getChannelData(0);
+    for (var i = 0; i < d.length; i++) {
+      var t = i/sr;
+      var freq = 2800 - t*1800;
+      var env = t < 0.05 ? t/0.05 : Math.exp(-(t-0.05)*1.8);
+      d[i] = (Math.sin(t*freq*2*Math.PI + Math.sin(t*180)*2.5)*0.5 + (Math.random()*2-1)*0.35) * env;
+    }
+    var s = a.createBufferSource(); s.buffer = b;
+    var bp = a.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2200; bp.Q.value=1.2;
+    var g = a.createGain(); g.gain.value=0.5;
+    s.connect(bp); bp.connect(g); g.connect(a.destination); s.start();
+  } catch(e) {}
+}
+
+function playThunder(delay) {
+  var a = getAudio(); if (!a) return;
+  delay = delay || 0;
+  setTimeout(function() {
+    try {
+      var dur = 3.5, sr = a.sampleRate;
+      var b = a.createBuffer(1, Math.floor(sr*dur), sr);
+      var d = b.getChannelData(0);
+      for (var i = 0; i < d.length; i++) {
+        var t = i/sr;
+        var env = t < 0.08 ? t/0.08 : Math.exp(-(t-0.08)*1.1);
+        var rumble = Math.sin(t*28*2*Math.PI)*0.4 + Math.sin(t*18*2*Math.PI)*0.3 + Math.sin(t*12*2*Math.PI)*0.2;
+        d[i] = (rumble + (Math.random()*2-1)*0.25) * env;
+      }
+      var s = a.createBufferSource(); s.buffer = b;
+      var lp = a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=280;
+      var g = a.createGain(); g.gain.value=0.55;
+      s.connect(lp); lp.connect(g); g.connect(a.destination); s.start();
+    } catch(e) {}
+  }, delay);
+}
+
+// ── REAL AUDIO ──
+function startRain() {
+  var el = document.getElementById('aud-rain');
+  if (!el || rainPlaying) return;
+  try {
+    el.volume = 0; el.play().then(function() {
+      rainPlaying = true;
+      var v = 0;
+      var f = setInterval(function() {
+        v = Math.min(v + 0.02, 0.5); el.volume = v;
+        if (v >= 0.5) clearInterval(f);
+      }, 100);
+    }).catch(function(){});
+  } catch(e) {}
+}
+
+function stopRain() {
+  var el = document.getElementById('aud-rain');
+  if (!el || !rainPlaying) return;
+  try {
+    var f = setInterval(function() {
+      el.volume = Math.max(0, el.volume - 0.02);
+      if (el.volume <= 0) { el.pause(); rainPlaying = false; clearInterval(f); }
+    }, 100);
+  } catch(e) {}
+}
+
+function startCrowd() {
+  var el = document.getElementById('aud-crowd');
+  if (!el || crowdPlaying) return;
+  try {
+    el.volume = 0; el.play().then(function() {
+      crowdPlaying = true;
+      var v = 0;
+      var f = setInterval(function() {
+        v = Math.min(v + 0.02, 0.32); el.volume = v;
+        if (v >= 0.32) clearInterval(f);
+      }, 100);
+    }).catch(function(){});
+  } catch(e) {}
+}
+
+function stopCrowd() {
+  var el = document.getElementById('aud-crowd');
+  if (!el || !crowdPlaying) return;
+  try {
+    var f = setInterval(function() {
+      el.volume = Math.max(0, el.volume - 0.025);
+      if (el.volume <= 0) { el.pause(); crowdPlaying = false; clearInterval(f); }
+    }, 80);
+  } catch(e) {}
+}
+
+function playRealCrash() {
+  var el = document.getElementById('aud-crash');
+  if (!el) return;
+  try { el.currentTime = 0; el.volume = 0.8; el.play().catch(function(){}); stopRain(); } catch(e) {}
+}
+
+// ── TYPEWRITER ──
+var ACADEMIC = 'While the inflationary model accounts for the initial homogeneity of the cosmic microwave background, the localized perturbations observed in the late-stage expansion phase suggest that the vacuum energy density may not be a true constant, but rather a dynamical scalar field that evolves over cosmological time, what some have termed a quintessence field, wherein the equation of state parameter w deviates measurably from negative one, implying a universe that is not merely expanding, but choosing.';
+
+var twStarted = false;
+var twStopped = false;
+
+function stopTypewriter() {
+  twStopped = true;
+  var el = document.getElementById('academic-text');
+  var cur = document.getElementById('typing-cursor');
+  if (el) el.textContent = ACADEMIC;
+  if (cur) cur.style.display = 'none';
+}
+
+function startTypewriter() {
+  if (twStarted) return;
+  twStarted = true;
+  var el = document.getElementById('academic-text');
+  var cur = document.getElementById('typing-cursor');
+  if (!el || !cur) return;
+  cur.style.display = 'inline-block';
+  var words = ACADEMIC.split(' ');
+  var wi = 0, ci = 0, txt = '';
+  function next() {
+    if (twStopped) { cur.style.display = 'none'; return; }
+    if (wi >= words.length) { cur.style.display = 'none'; return; }
+    var w = words[wi];
+    if (ci < w.length) {
+      txt += w[ci++]; el.textContent = txt;
+      if (Math.random() > 0.3) playClick();
+      setTimeout(next, 30 + Math.random()*20);
+    } else {
+      txt += ' '; el.textContent = txt;
+      ci = 0; wi++;
+      setTimeout(next, 60 + Math.random()*30);
+    }
+  }
+  setTimeout(next, 300);
+}
+
+// ── SCROLL TRIGGERS ──
+var creakPlayed = false;
+var crowdStarted = false;
+var dart1 = false, dart2 = false, dart3 = false;
+var gigglePlayed = false;
+var crashTriggered = false;
+var radioStarted = false;
+
+function onScroll() {
+  var vh = window.innerHeight;
+
+  if (activePage === 'present') {
+    // Typewriter
+    var acad = document.getElementById('academic-text');
+    if (acad && !twStarted && acad.getBoundingClientRect().top < vh) {
+      setTimeout(startTypewriter, 300);
+    }
+    // Door creak
+    var sfxDoor = document.getElementById('sfx-door');
+    if (sfxDoor && !creakPlayed && sfxDoor.getBoundingClientRect().top < vh) {
+      creakPlayed = true; setTimeout(playCreak, 400);
+    }
+    // Giggle
+    if (!gigglePlayed) {
+      var paras = document.querySelectorAll('#page-present .p');
+      for (var i = 0; i < paras.length; i++) {
+        if (paras[i].textContent.indexOf('rare and real') > -1 && paras[i].getBoundingClientRect().top < vh) {
+          gigglePlayed = true; setTimeout(playGiggle, 700); break;
+        }
+      }
+    }
+  }
+
+  if (activePage === 'flashback') {
+    // Crowd
+    if (!crowdStarted && window.scrollY > 50) {
+      crowdStarted = true; setTimeout(startCrowd, 500);
+    }
+    // Darts
+    var pcs = document.querySelectorAll('#page-flashback .p-center');
+    for (var i = 0; i < pcs.length; i++) {
+      var rect = pcs[i].getBoundingClientRect();
+      if (rect.top < vh) {
+        if (!dart1 && pcs[i].textContent.indexOf('Inner ring. Clean') > -1) { dart1 = true; setTimeout(playDart, 200); }
+        if (!dart2 && pcs[i].textContent.indexOf('Inner ring. Again') > -1) { dart2 = true; setTimeout(playDart, 200); }
+      }
+    }
+    var bull = document.querySelector('#page-flashback .bullseye');
+    if (!dart3 && bull && bull.getBoundingClientRect().top < vh) { dart3 = true; setTimeout(playDart, 300); }
+  }
+
+  if (activePage === 'drive') {
+    // Radio
+    var rw = document.getElementById('radio-widget');
+    if (!radioStarted && rw && rw.getBoundingClientRect().top < vh + 100) {
+      radioStarted = true; setTimeout(startRadioSequence, 500);
+    }
+    // Crash
+    var roll = document.getElementById('el-roll');
+    if (!crashTriggered && roll && roll.getBoundingClientRect().top < vh) {
+      crashTriggered = true;
+      playScreech();
+      setTimeout(function() {
+        var pg = document.getElementById('page-drive');
+        pg.style.animation = 'shake 0.45s ease';
+        setTimeout(function(){ pg.style.animation = ''; }, 500);
+        playRealCrash();
+      }, 900);
+    }
+  }
+}
+
+window.addEventListener('scroll', onScroll, {passive: true});
+
+// ── RADIO SEQUENCE ──
+function startRadioSequence() {
+  if (document.getElementById('radio-phase-warning') &&
+      document.getElementById('radio-phase-warning').style.display === 'none') return;
+
+  var WARNING = 'Severe weather warning in effect for Lothian and Borders. Motorists are strongly advised to avoid minor roads and rural routes. Heavy rain and reduced visibility reported. This warning remains in effect until';
+  var warningEl = document.getElementById('radio-warning-text');
+  var staticEl = document.getElementById('radio-static');
+  var phaseWarning = document.getElementById('radio-phase-warning');
+  var phaseMusic = document.getElementById('radio-phase-music');
+  var feliciaLine = document.getElementById('radio-felicia-line');
+  var radioTrack = document.getElementById('radio-track');
+  var stationName = document.getElementById('radio-station-name');
+
+  if (!warningEl) return;
+
+  var wi = 0;
+  var typeW = setInterval(function() {
+    warningEl.textContent = WARNING.slice(0, wi++);
+    if (wi > WARNING.length) {
+      clearInterval(typeW);
+      setTimeout(function() {
+        if (staticEl) staticEl.style.display = 'block';
+        setTimeout(function() {
+          if (phaseWarning) phaseWarning.style.display = 'none';
+          if (phaseMusic) phaseMusic.style.display = 'block';
+          var FLINE = 'Oscar — find something with music.';
+          var fi = 0;
+          var typeF = setInterval(function() {
+            if (feliciaLine) feliciaLine.textContent = '"' + FLINE.slice(0, fi++) + '"';
+            if (fi > FLINE.length) {
+              clearInterval(typeF);
+              setTimeout(function() {
+                var stations = ['98.7', '103.2', '—', '94.5', '107.1', '—', '96.3'];
+                var si = 0;
+                var sw = setInterval(function() {
+                  if (stationName) stationName.textContent = 'FM ' + stations[si++] + ' · · ·';
+                  if (si >= stations.length) {
+                    clearInterval(sw);
+                    if (stationName) stationName.textContent = 'Capital FM · 105.3';
+                    if (feliciaLine) feliciaLine.textContent = '';
+                    if (radioTrack) radioTrack.style.display = 'block';
+                    var songEl = document.getElementById('radio-song-name');
+                    if (songEl) songEl.textContent = '\u266a  Something Good  \u00b7  Alt-J';
+                    var radioEl = document.getElementById('aud-radio');
+                    if (radioEl) {
+                      radioEl.volume = 0.35;
+                      radioEl.play().catch(function(){ playSynthSong(); });
+                    } else {
+                      playSynthSong();
+                    }
+                  }
+                }, 320);
+              }, 1200);
+            }
+          }, 28);
+        }, 1800);
+      }, 1000);
+    }
+  }, 22);
+}
+
+function playSynthSong() {
+  var a = getAudio(); if (!a) return;
+  var notes = [
+    {f:261.6,t:0,d:1.2},{f:311.1,t:0.8,d:1.0},{f:349.2,t:1.6,d:1.2},
+    {f:293.7,t:2.4,d:0.9},{f:261.6,t:3.2,d:1.4},{f:233.1,t:4.2,d:1.0},
+    {f:261.6,t:5.2,d:1.2},{f:311.1,t:6.0,d:1.0},{f:329.6,t:6.8,d:1.4},
+    {f:293.7,t:7.8,d:0.9},{f:261.6,t:8.6,d:2.0}
+  ];
+  notes.forEach(function(n) {
+    try {
+      var osc = a.createOscillator();
+      var gain = a.createGain();
+      var filter = a.createBiquadFilter();
+      filter.type = 'lowpass'; filter.frequency.value = 1200;
+      osc.type = 'sine'; osc.frequency.value = n.f;
+      gain.gain.setValueAtTime(0, a.currentTime + n.t);
+      gain.gain.linearRampToValueAtTime(0.1, a.currentTime + n.t + 0.08);
+      gain.gain.linearRampToValueAtTime(0.06, a.currentTime + n.t + n.d * 0.5);
+      gain.gain.linearRampToValueAtTime(0, a.currentTime + n.t + n.d);
+      osc.connect(filter); filter.connect(gain); gain.connect(a.destination);
+      osc.start(a.currentTime + n.t);
+      osc.stop(a.currentTime + n.t + n.d + 0.1);
+    } catch(e) {}
+  });
+}
+
+// ── CHOICES ──
+var oscarChoiceMade = false;
+var swerveChoiceMade = false;
+
+function oscarChoice(n) {
+  if (oscarChoiceMade) return;
+  oscarChoiceMade = true;
+
+  var btns = document.querySelectorAll('#choice-oscar .choice-btn');
+  for (var i = 0; i < btns.length; i++) {
+    if (i + 1 === n) btns[i].classList.add('selected');
+    else btns[i].style.opacity = '0.35';
+  }
+
+  var oscar = ['', '"I always trust you."', '"You sure it\'s not a dirt road?"', '"Lead the way."'];
+  var oscarAct = ['', 'Indicating left. No hesitation.', '', 'Leaning over, kisses her cheek.'];
+  var felicia = ['', '', '"It\'s a road, Oscar." A pause. "Do you trust me or not?"', '"Good man."'];
+  var feliciaAct = ['', 'She reaches over and quietly touches his hand on the gearstick.', 'He indicates left without another word.', 'She laughs once, small and warm.'];
+
+  var html = '<div class="choice-result">';
+  html += '<div class="dl dl-oscar"><div class="dl-spk">Oscar</div>';
+  if (oscarAct[n]) html += '<div class="dl-act">' + oscarAct[n] + '</div>';
+  html += '<div class="dl-line">' + oscar[n] + '</div></div>';
+  if (felicia[n]) {
+    html += '<div class="dl dl-felicia"><div class="dl-spk">Felicia</div>';
+    if (feliciaAct[n]) html += '<div class="dl-act">' + feliciaAct[n] + '</div>';
+    html += '<div class="dl-line">' + felicia[n] + '</div></div>';
+  } else if (feliciaAct[n]) {
+    html += '<p class="p" style="font-style:italic;color:#9a8a6a;">' + feliciaAct[n] + '</p>';
+  }
+  html += '</div>';
+
+  var el = document.getElementById('oscar-choice-result');
+  if (el) el.innerHTML = html;
+
+  try {
+    var raw = localStorage.getItem('traces_save_v1');
+    if (raw) {
+      var s = JSON.parse(raw);
+      if (!s.choices) s.choices = {};
+      s.choices.prologue_oscar = n;
+      localStorage.setItem('traces_save_v1', JSON.stringify(s));
+    }
+  } catch(e) {}
+}
+
+function swerveChoice(dir) {
+  if (swerveChoiceMade) return;
+  swerveChoiceMade = true;
+
+  var btns = document.querySelectorAll('#choice-swerve .choice-btn');
+  for (var i = 0; i < btns.length; i++) {
+    var d = btns[i].textContent.indexOf('left') > -1 ? 'left' : 'right';
+    if (d === dir) btns[i].classList.add('selected');
+    else btns[i].style.opacity = '0.35';
+  }
+
+  var text = dir === 'left'
+    ? 'The car goes left. Hard into the ditch. The world tilts. She hits the window — cold glass against her temple. She sees the sky through the shattered windscreen. Dark. Rain. Nothing else.'
+    : 'The car goes right. Into the embankment. The world folds. Her vision whites out — then clears.';
+  var note = dir === 'left'
+    ? 'She does not hear him. She will wonder about this for the rest of her life.'
+    : 'And in the wreckage, in the rain, she hears him say her name. Just once. Then nothing.';
+
+  var html = '<div class="choice-result">';
+  html += '<p class="p" style="color:#9a8a6a;">' + text + '</p>';
+  html += '<p class="p" style="color:#6a5a40;font-style:italic;">' + note + '</p>';
+  html += '</div>';
+
+  var el = document.getElementById('swerve-result');
+  if (el) el.innerHTML = html;
+
+  try {
+    var raw = localStorage.getItem('traces_save_v1');
+    if (raw) {
+      var s = JSON.parse(raw);
+      if (!s.choices) s.choices = {};
+      s.choices.prologue_swerve = dir;
+      localStorage.setItem('traces_save_v1', JSON.stringify(s));
+    }
+  } catch(e) {}
+}
+
+// ── SAVE ──
+var SAVE_KEY = 'traces_save_v1';
+
+function savePrologue() {
+  try {
+    var raw = localStorage.getItem(SAVE_KEY);
+    var s = raw ? JSON.parse(raw) : {
+      version: 1, created: Date.now(),
+      currentChapter: 'prologue', currentScene: 'start',
+      unlockedChapters: ['prologue'], completedChapters: [],
+      settings: {sound: true, motion: false, textSize: 2},
+      choices: {}, chapterSaves: {}
+    };
+    if (s.completedChapters.indexOf('prologue') === -1) s.completedChapters.push('prologue');
+    if (s.unlockedChapters.indexOf('ch1') === -1) s.unlockedChapters.push('ch1');
+    if (!s.chapterSaves) s.chapterSaves = {};
+    s.chapterSaves.prologue = Date.now();
+    s.currentChapter = 'ch1';
+    s.updated = Date.now();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+    document.getElementById('save-prompt').style.display = 'none';
+    document.getElementById('save-done').style.display = 'block';
+  } catch(e) { goToMenu(); }
+}
+
+// ── ADD SHAKE KEYFRAME ──
+var shakeStyle = document.createElement('style');
+shakeStyle.textContent = '@keyframes shake{0%,100%{transform:none}15%{transform:translate(-4px,2px)}30%{transform:translate(3px,-3px)}45%{transform:translate(-2px,4px)}60%{transform:translate(4px,-1px)}75%{transform:translate(-3px,2px)}}';
+document.head.appendChild(shakeStyle);
+
+// ── BOOT ──
+setTimeout(onScroll, 100);
+
+</script>
+</body>
+</html>
